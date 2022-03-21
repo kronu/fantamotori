@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}Classifica Scontri - Fanta Formula{% endblock %}
+
+{% block body %}
+<div style="background-color: red;">
+  <p class="titoloscelta toppagina">Classifica</p>
+</div>
+<div class="imppagina">
+  <button style="width:49%" class="btn btn-danger btn-lg">Classifica Scontri</button>
+  <a style="width:49%" href="classifica_punti" class="btn btn-secondary btn-lg">Classifica Punti</a>
+  <table class="table table-striped" style="margin-top: 5vh;">
+    <thead>
+      <tr style="text-align: center;">
+        <th scope="row">#</th>
+        <td style="font-weight:bold">User</td>
+        <td style="font-weight:bold">Punti</td>
+        <td style="font-weight:bold">Diff.</td>
+      </tr>
+    </thead>
+    <tbody style="text-align: center;">
+      {% for rank in ranking %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{ rank.username }}</td>
+        <td>{{ rank.p_scontri }}</td>
+        <td>{{ rank.differenza }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

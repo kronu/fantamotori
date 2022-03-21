@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}Home - Fanta Formula{% endblock %}
+
+{% block body %}
+<div style="background-color: red;">
+  <p class="titoloscelta toppagina">Fanta Formula</p>
+</div>
+<div class="imppagina">
+  <a href="scelta_formazione" class="btn btn-success btn-lg" style="width: 100%; margin-top: 5vh;">Inserisci formazione</a>
+  <p style="margin-top: 8px; color:red; text-align: center;"><b>{{ nextgara.posto }} - {{ nextgara.data }}</b></p>
+  {% if nextgara.f2 %}
+  <p style="color:red; text-align: center; font-weight: bold;">QUESTA GIORNATA CI SARÀ LA F2!!!</p>
+  {% else %}
+  <p style="color:black; text-align: center;">Questa giornata NON ci sarà la F2</p>
+  {% endif %}
+  <a href="classifica_scontri" class="btn btn-secondary btn-lg" style="width: 100%; margin-top: 7vh;">Classifica</a>
+  <a href="rose" class="btn btn-secondary btn-lg" style="width: 100%; margin-top: 5vh;">Rose</a>
+  <a href="calendario" class="btn btn-secondary btn-lg" style="width: 100%; margin-top: 5vh;">Calendario</a>
+  <a href="calcolo_scelta" class="btn btn-secondary btn-lg" style="width: 100%; margin-top: 5vh;">Calcolo giornata</a>
+</div>
+{% endblock %}

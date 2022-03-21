@@ -1,0 +1,95 @@
+.body {
+  max-width: 720px;
+  margin: auto;
+}
+
+.titoloscelta {
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+.sceltafanta {
+  border: 1px solid black;
+  height: 50vh;
+  text-align: center;
+  padding-top: 25vh;
+}
+
+.testoscelta {
+  color: white;
+  text-shadow: 0 0 15px black;
+}
+
+.toppagina {
+  color: white;
+  text-align: center;
+}
+
+.imppagina {
+  width: 90%;
+  margin: auto;
+}
+
+.imgutente {
+  width: 50px;
+  height: 50px;
+  float: left;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.rosautente {
+  width: 100%;
+  border: 1px solid black;
+  padding: 10px 10px 10px 10px;
+  font-weight: bold;
+}
+
+.selezgiornata {
+  width: 100%;
+  text-align: center;
+  height: 7vh;
+  font-weight: bold;
+  font-size: x-large;
+}
+
+.scontroutenti {
+  width: 100%;
+  background-color: gainsboro;
+  text-align: center;
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+.risultato {
+  float: left;
+  width: 50%;
+  text-align: center;
+  font-size: larger;
+}
+
+.calcgiornata {
+  width: 100%;
+  text-align: center;
+  height: 10vh;
+  font-weight: bold;
+  font-size: xx-large;
+}
+
+.formazione {
+  clear: both;
+  float: left;
+  width: 50%;
+  text-align: center;
+  font-size: larger;
+}
+
+.punti {
+  float: left;
+  width: 50%;
+  text-align: center;
+}
+
+button:hover {
+  cursor: pointer;
+}

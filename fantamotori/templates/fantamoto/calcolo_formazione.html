@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block title %}Calcolo Formazione - Fanta Moto{% endblock %}
+
+{% block body %}
+<div style="background-color: blue;">
+    <p class="titoloscelta toppagina">Calcolo Formazione</p>
+</div>
+<div class="imppagina" style="margin-bottom: 10px;">
+    <div class="scontroutenti">
+        <p>{{id}}° giornata - {{user}}</p>
+    </div>
+    {% if calcolata or formazione.p_totali == 0 %}
+        <div style="background-color: rgb(255, 217, 0); border: 1px solid orangered; color:orangered; font-size: xx-large; font-weight: bold; text-align: center; padding: 2%;">
+            <p>
+                La formazione di {{user}} della {{id}}° giornata è già stata calcolata! Se si vuole cambiare il punteggio di una
+                formazione già calcolata, contattami.
+            </p>
+        </div>
+        <br>
+    {% else %}
+        <div style="width: 100%;">
+            <form method="POST" action="{{utente}}/calcolo">
+                {% csrf_token %}
+                {% for pilota in piloti %}
+                <div class="formazione">
+                    <p>{{pilota.nome}} {% if pilota.nome == capitano.nome %}(C){% endif %}</p>
+                </div>
+                <div class="punti">
+                    <input name="p_piloti" type="number" value="0">
+                </div>
+                {% endfor %}
+                {% for team in teams %}
+                <div class="formazione">
+                    <p>{{team.nome}}</p>
+                </div>
+                <div class="punti">
+                    <input name="p_teams" type="number" value="0">
+                </div>
+                {% endfor %}
+                <div class="formazione">
+                    <p>{{tm.nome}}</p>
+                </div>
+                <div class="punti">
+                    <input name="p_tm" type="number" value="0">
+                </div>
+                <input value="Conferma" type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 3vh;">
+            </form>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

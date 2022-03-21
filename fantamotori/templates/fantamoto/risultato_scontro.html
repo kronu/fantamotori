@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ now_id }}° giornata - Fanta Moto{% endblock %}
+
+{% block body %}
+<div style="background-color: blue;">
+    <p class="titoloscelta toppagina">{{ now_id }}° giornata</p>
+</div>
+<div class="imppagina">
+    <div class="scontroutenti">
+        <p>{{ sfida }}</p>
+    </div>
+    <br>
+    {% if formazione1 == "" and piloti1 == "" and teams1 == "" and tm1 == "" and formazione2 == "" and piloti2 == "" and teams2 == "" and tm2 == "" %}
+    <p style="text-align: center; font-size: xx-large;">Sfida ancora da disputare</p>
+    {% else %}
+    <div class="risultato">
+        <p>{{ formazione1.data }}</p>
+        <hr>
+        {% for pilota1 in piloti1 %}
+        <p>{{ pilota1.nome }} {% if pilota1.nome == capitano1 %}(C){% endif %}</p>
+        {% endfor %}
+        <br>
+        {% for team1 in teams1 %}
+        <p>{{ team1.nome }}</p>
+        {% endfor %}
+        <br>
+        <p>{{ tm1 }}</p>
+        <hr>
+        {% if formazione1.risultato == 0 %}
+        <p style="font-weight: bold; color: red">SCONFITTA</p>
+        {% elif formazione1.risultato == 1 %}
+        <p style="font-weight: bold; color: green">VITTORIA</p>
+        {% elif formazione1.risultato == 2 %}
+        <p style="font-weight: bold; color: gray">PAREGGIO</p>
+        {% endif %}
+        {% if formazione1.p_totali or formazione1.p_totali == 0 %}
+        <p style="font-weight: bold;">{{ formazione1.p_totali }} PUNTI</p>
+        {% else %}
+        <p style="font-weight: bold;">Ancora da calcolare</p>
+        {% endif %}
+    </div>
+    <div class="risultato">
+        <p>{{ formazione2.data }}</p>
+        <hr>
+        {% for pilota2 in piloti2 %}
+        <p>{{ pilota2.nome }} {% if pilota2.nome == capitano2 %}(C){% endif %}</p>
+        {% endfor %}
+        <br>
+        {% for team2 in teams2 %}
+        <p>{{ team2.nome }}</p>
+        {% endfor %}
+        <br>
+        <p>{{ tm2 }}</p>
+        <hr>
+        {% if formazione2.risultato == 0 %}
+        <p style="font-weight: bold; color: red">SCONFITTA</p>
+        {% elif formazione2.risultato == 1 %}
+        <p style="font-weight: bold; color: green">VITTORIA</p>
+        {% elif formazione2.risultato == 2 %}
+        <p style="font-weight: bold; color: gray">PAREGGIO</p>
+        {% endif %}
+        {% if formazione2.p_totali or formazione2.p_totali == 0 %}
+        <p style="font-weight: bold;">{{ formazione2.p_totali }} PUNTI</p>
+        {% else %}
+        <p style="font-weight: bold;">Ancora da calcolare</p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

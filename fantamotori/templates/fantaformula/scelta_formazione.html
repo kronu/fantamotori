@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}Formazione - Fanta Moto{% endblock %}
+
+{% block body %}
+<div style="background-color: red;">
+  <p class="titoloscelta toppagina">Scelta formazione</p>
+</div>
+<div class="imppagina">
+  <p style="color: red; text-align: center; font-weight: bold;">{{ nextgara.posto }} - {{ nextgara.data }}</p>
+  {% if nextgara.f2 %}
+  <p style="color: red; text-align: center; font-weight: bold;">Schiera 4 piloti, 2 team e team manager (CON F2)</p>
+  {% else %}
+  <p style="text-align: center;">Schiera 2 piloti, team e team manager (NO F2)</p>
+  {% endif %}
+  <br>
+  <form method="POST" action="schieramento">
+    {% csrf_token %}
+    <p style="background-color: gray; text-align: center; font-weight: bold; font-size: xx-large;">Piloti</p>
+    {% for pilota in piloti %}
+    <div style="margin-left: 5%;">
+      <label for="{{ pilota.nome }}" style="font-size: x-large; margin-left: 3%;">
+        <input name="piloti" value="{{ pilota.nome }} - {{ pilota.categoria }}" type="checkbox">
+        <span>{{ pilota.nome }} - {{ pilota.categoria }}</span>
+      </label>
+      <br>
+    </div>
+    {% endfor %}
+    <br>
+    <p style="background-color: gray; text-align: center; font-weight: bold; font-size: xx-large;">Team</p>
+    {% for team in teams %}
+    <div style="margin-left: 5%;">
+      <input name="teams" value="{{ team.nome }} - {{ team.categoria }}" type="checkbox">
+      <label for="{{ team.nome }}" style="font-size: x-large; margin-left: 3%">{{ team.nome }} - {{ team.categoria }}</label>
+      <br>
+    </div>
+    {% endfor %}
+    <br>
+    <p style="background-color: gray; text-align: center; font-weight: bold; font-size: xx-large;">Team Manager</p>
+    <div style="margin-left: 5%;">
+      <input name="tm" value="{{ tm.nome }}" type="checkbox">
+      <label for="{{ tm.nome }}" style="font-size: x-large; margin-left: 3%">{{ tm.nome }}</label>
+      <br>
+    </div>
+    <br>
+    <button style="width: 100%; margin-bottom: 30px;" class="btn btn-danger btn-lg" type="submit">Conferma formazione</button>
+  </form>
+</div>
+{% endblock %}

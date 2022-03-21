@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block title %}Rosa di {{ utente }} - Fanta Formula{% endblock %}
+
+{% block body %}
+<div style="background-color: red;">
+  <p class="titoloscelta toppagina">Rosa di {{ utente }}</p>
+</div>
+<div class="imppagina">
+  <table style="text-align: center; font-size: larger;" class="table">
+    <thead>
+      <tr style="background-color: gray; text-align: center;">
+        <th scope="col" style=" text-align: center;">Pilota</th>
+        <th scope="col" style=" text-align: center;">Categoria</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pilota in piloti %}
+      <tr>
+        <td>{{ pilota.nome }}</td>
+        <td>{{ pilota.categoria }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <br>
+  <table style="text-align: left; font-size: larger;" class="table">
+    <thead>
+      <tr style="background-color: gray">
+        <th scope="col" style=" text-align: center;">Team</th>
+        <th scope="col" style=" text-align: center;">Categoria</th>
+      </tr>
+    </thead>
+    <tbody style=" text-align: center;">
+      {% for team in teams %}
+      <tr>
+        <td>{{ team.nome }}</td>
+        <td>{{ team.categoria }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <br>
+  <table style="text-align: left; font-size: larger;" class="table">
+    <thead>
+      <tr style="background-color: gray">
+        <th scope="col" style=" text-align: center;">Team Manager</th>
+      </tr>
+    </thead>
+    <tbody style=" text-align: center;">
+      <tr>
+        <td>{{ tm.nome }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

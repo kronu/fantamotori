@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}Calendario - Fanta Moto{% endblock %}
+
+{% block body %}
+<div style="background-color: blue;">
+    <p class="titoloscelta toppagina">Calendario</p>
+</div>
+<div style="margin-bottom: 10px; margin-top: 10vh;" class="imppagina">
+    <select id="box_giornate" style="margin-bottom: 20px; background-color: gainsboro;" class="form-select selezgiornata">
+        {% for giornata in giornate %}
+        <option id="{{ giornata.id }}" value="{{ giornata.id }}">{{ giornata.id }} - {{ giornata.posto }}</option>
+        {% endfor %}
+    </select>
+    <button id="button" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 10vh;">Avanti</button>
+</div>
+<script>
+    document.getElementById('button').onclick = function() {
+        g = document.getElementById("box_giornate");
+        s = g.options[g.selectedIndex].value;
+        window.location.href = "calendario/" + s;
+    }
+</script>
+{% endblock %}

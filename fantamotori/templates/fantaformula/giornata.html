@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ giornata.posto }} - Fanta Formula{% endblock %}
+
+{% block body %}
+<div style="background-color: red;">
+    <p class="titoloscelta toppagina">{{ giornata.id }} - {{ giornata.posto }}</p>
+</div>
+<div style="margin-bottom: 10px; margin-top: 10vh;" class="imppagina">
+    <div class="scontroutenti">
+        <a href="{{giornata.id}}/{{sfida1.0}}_{{sfida1.1}}">
+            <p>{{ sfida1.0 }} - {{ sfida1.1 }}</p>
+        </a>
+    </div>
+    <div class="scontroutenti">
+        <a href="{{giornata.id}}/{{sfida2.0}}_{{sfida2.1}}">
+            <p>{{ sfida2.0 }} - {{ sfida2.1 }}</p>
+        </a>
+    </div>
+    <div class="scontroutenti">
+        <a href="{{giornata.id}}/{{sfida3.0}}_{{sfida3.1}}">
+            <p>{{ sfida3.0 }} - {{ sfida3.1 }}</p>
+        </a>
+    </div>
+    <div class="scontroutenti">
+        <a href="{{giornata.id}}/{{sfida4.0}}_{{sfida4.1}}">
+            <p>{{ sfida4.0 }} - {{ sfida4.1 }}</p>
+        </a>
+    </div>
+</div>
+{% endblock %}
