@@ -8,11 +8,11 @@
 </div>
 <div class="imppagina">
     <div class="scontroutenti">
-        <p>{{ sfida }}</p>
+        <p style="font-size: 50px;">{{ sfida }}</p>
     </div>
     <br>
     {% if formazione1 == "" and piloti1 == "" and teams1 == "" and tm1 == "" and formazione2 == "" and piloti2 == "" and teams2 == "" and tm2 == "" %}
-    <p style="text-align: center; font-size: xx-large;">Sfida ancora da disputare</p>
+    <p style="text-align: center;">Sfida ancora da disputare</p>
     {% else %}
     <div class="risultato">
         <p>{{ formazione1.data }}</p>

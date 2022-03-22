@@ -14,15 +14,15 @@
     <form action="{% url 'login' %}" method="POST" autocomplete="off" style="margin-top: 10vh;">
       {% csrf_token %}
       <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">Username</label>
-        <input name="username" type="text" class="form-control" placeholder="Inserire username qui">
+        <label for="exampleInputEmail1" class="form-label" style="font-size: 30px;">Username</label>
+        <input name="username" type="text" class="form-control" placeholder="Inserire username qui" style="padding: 5%; font-size: 30px;">
       </div>
       <br>
       <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">Password</label>
-        <input name="password" type="password" class="form-control" placeholder="Inserire password qui">
+        <label for="exampleInputPassword1" class="form-label" style="font-size: 30px;">Password</label>
+        <input name="password" type="password" class="form-control" placeholder="Inserire password qui" style="padding: 5%; font-size: 30px;">
       </div>
-      <button style="cursor: pointer; width: 100%; text-align: center; margin-top: 10vh;" type="submit" class="btn btn-dark btn-lg">Entra</button>
+      <button style="cursor: pointer; width: 100%; text-align: center; margin-top: 10vh; color: white;" type="submit" class="btn btn-dark btn-lg">Entra</button>
     </form>
 </div>
 {% endblock %}

@@ -1,10 +1,10 @@
 .body {
-  max-width: 720px;
   margin: auto;
+  font-size: 30px;
 }
 
 .titoloscelta {
-  font-size: xx-large;
+  font-size: 70px;
   font-weight: bold;
 }
 
@@ -50,14 +50,14 @@
   text-align: center;
   height: 7vh;
   font-weight: bold;
-  font-size: x-large;
+  font-size: 50px;
 }
 
 .scontroutenti {
   width: 100%;
   background-color: gainsboro;
   text-align: center;
-  font-size: xx-large;
+  font-size: 50px;
   font-weight: bold;
 }
 
@@ -92,4 +92,14 @@
 
 button:hover {
   cursor: pointer;
+}
+
+a.btn-lg {
+  padding: 5%;
+  font-size: 30px;
+}
+
+button.btn-lg {
+  padding: 5%;
+  font-size: 30px;
 }
