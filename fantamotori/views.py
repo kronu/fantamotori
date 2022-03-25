@@ -615,7 +615,7 @@ def formula_calendario(request, id):
         sfida4 = ["Paul Bird Motorsport", "Albwin27"]
     elif id == "3" or id == "10" or id == "17":
         sfida1 = ["Zanno", "Vettel05"]
-        sfida2 = ["Cortez Balck Team", "Paul Bird Motorsport"]
+        sfida2 = ["Cortez Black Team", "Paul Bird Motorsport"]
         sfida3 = ["Albwin27", "Tazza"]
         sfida4 = ["Cicciobirro01", "Dragon trainer"]
     elif id == "4" or id == "11" or id == "18":
