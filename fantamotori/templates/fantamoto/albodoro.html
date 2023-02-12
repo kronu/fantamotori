@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block title %}Albo d'oro - FantaMoto{% endblock %}
+
+{% block body %}
+<div class="imppagina">
+    <h1 class="albo-anno">Stagione 2022</h1>
+    <h4 class="albo-classifica">Classifica scontri</h4>
+    <div id="div-scontri" class="home-hidden">
+        <table class="table table-striped">
+            <thead>
+                <tr style="text-align: center;">
+                    <th scope="row">#</th>
+                    <td style="font-weight:bold">User</td>
+                    <td style="font-weight:bold">Punti</td>
+                    <td style="font-weight:bold">Diff.</td>
+                </tr>
+            </thead>
+            <tbody style="text-align: center;">
+            {% for rank in s_ranking %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ rank.ex_username }}</td>
+                    <td>{{ rank.ex_pscontri }}</td>
+                    <td>{{ rank.ex_differenza }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <h4 class="albo-classifica">Classifica scontri</h4>
+    <div id="div-punti" class="home-hidden">
+        <table class="table table-striped">
+            <thead>
+                <tr style="text-align: center;">
+                    <th scope="row">#</th>
+                    <td style="font-weight:bold">User</td>
+                    <td style="font-weight:bold">Punti</td>
+                    <td style="font-weight:bold">Diff.</td>
+                </tr>
+            </thead>
+            <tbody style="text-align: center;">
+            {% for rank in p_ranking %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ rank.ex_username }}</td>
+                    <td>{{ rank.ex_pgenerali }}</td>
+                    <td>{{ rank.ex_differenza }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

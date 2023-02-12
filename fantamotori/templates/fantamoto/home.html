@@ -1,22 +1,162 @@
 {% extends "layout.html" %}
 
-{% block title %}Home - Fanta Moto{% endblock %}
+{% block title %}Home - FantaMoto{% endblock %}
 
 {% block body %}
-<div style="background-color: blue;">
-  <p class="titoloscelta toppagina">Fanta Moto</p>
-</div>
 <div class="imppagina">
-  <a href="scelta_formazione" class="btn btn-success btn-lg" style="width: 100%; margin-top: 5vh;">Inserisci formazione</a>
-  <p style="margin-top: 30px; color:red; text-align: center;"><b>{{ nextgara.posto }} - {{ nextgara.data }}</b></p>
-  {% if nextgara.motoe %}
-  <p style="color:red; text-align: center; font-weight: bold;">QUESTA GIORNATA CI SARÀ LA MOTOE!!!</p>
-  {% else %}
-  <p style="color:black; text-align: center;">Questa giornata NON ci sarà la MotoE</p>
-  {% endif %}
-  <a href="classifica_scontri" class="btn btn-secondary btn-lg" style="width: 100%; margin-top: 7vh;">Classifica</a>
-  <a href="rose" class="btn btn-secondary btn-lg" style="width: 100%; margin-top: 5vh;">Rose</a>
-  <a href="calendario" class="btn btn-secondary btn-lg" style="width: 100%; margin-top: 5vh;">Calendario</a>
-  <a href="calcolo_scelta" class="btn btn-secondary btn-lg" style="width: 100%; margin-top: 5vh;">Calcolo giornata</a>
+    <div class="home-profilo">
+        <img class="circle-img" src="{{utente.immagine}}">
+        <p class="home-utente">{{utente.username}}</p>
+    </div>
+    {% if not ultimagara and not previousgara %}
+    <p class="home-labelrisultato">Prima gara ancora da disputare</p>
+    <div class="home-recente">
+        <div class="home-risultato">
+            -
+        </div>
+        <div class="home-risultato">
+            -
+        </div>
+    </div>
+    {% else %}
+    <p class="home-labelrisultato">Ultimo risultato al {{ ultimagara.posto }}</p>
+    <div class="home-recente">
+        {% if previousgara.risultato == 0 %}
+        <div class="home-risultato" style="color:red">
+            Sconfitta
+        </div>
+        <div class="home-risultato">
+            {{ previousgara.p_totali }} punti
+        </div>
+        {% elif previousgara.risultato == 1 %}
+        <div class="home-risultato" style="color:green">
+            Vittoria
+        </div>
+        <div class="home-risultato">
+            {{ previousgara.p_totali }} punti
+        </div>
+        {% elif previousgara.risultato == 2 %}
+        <div class="home-risultato">
+            Pareggio
+        </div>
+        <div class="home-risultato">
+            {{ previousgara.p_totali }} punti
+        </div>
+        {% elif not previousgara.risultato %}
+        <div class="home-risultato">
+            Da calcolare
+        </div>
+        <div class="home-risultato">
+            -
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+    <div class="home-classifiche">
+        <div class="home-class" style="color:black">
+            <button id="btn-scontri" class="btn btn-primary home-classbtn">Classifica Scontri</button>
+        </div>
+        <div class="home-class">
+            <button id="btn-punti" class="btn btn-primary home-classbtn">Classifica Punti</button>
+        </div>
+    </div>
+    <div id="div-scontri" class="home-hidden" style="display: none">
+        <table class="table table-striped">
+            <thead>
+                <tr style="text-align: center;">
+                    <th scope="row">#</th>
+                    <td style="font-weight:bold">User</td>
+                    <td style="font-weight:bold">Punti</td>
+                    <td style="font-weight:bold">Diff.</td>
+                </tr>
+            </thead>
+            <tbody style="text-align: center;">
+            {% for rank in s_ranking %}
+              <tr>
+                  <th scope="row">{{ forloop.counter }}</th>
+                  <td>{{ rank.username }}</td>
+                  <td>{{ rank.p_scontri }}</td>
+                  <td>{{ rank.differenza }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div id="div-punti" class="home-hidden" style="display: none;">
+        <table class="table table-striped">
+            <thead>
+                <tr style="text-align: center;">
+                    <th scope="row">#</th>
+                    <td style="font-weight:bold">User</td>
+                    <td style="font-weight:bold">Punti</td>
+                    <td style="font-weight:bold">Diff.</td>
+                </tr>
+            </thead>
+            <tbody style="text-align: center;">
+            {% for rank in p_ranking %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ rank.username }}</td>
+                    <td>{{ rank.p_generali }}</td>
+                    <td>{{ rank.differenza }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="home-icons">
+        <div class="home-iconcolumn">
+            <div class="home-icon">
+                <a class="home-iconlink" href="../fantamoto/rose">
+                    <p class="home-iconlabel">Rose</p>
+                    <img width="30px" height="30px" src="static/helmet.png">
+                </a>
+            </div>
+            <div class="home-icon">
+                <a class="home-iconlink" href="../fantamoto/albo">
+                  <p class="home-iconlabel">Albo d'oro</p>
+                  <img width="30px" height="30px" src="static/trophy.png">
+                </a>
+            </div>
+        </div>
+        <div class="home-iconcolumn">
+          <div class="home-icon">
+            <a class="home-iconlink" href="../fantamoto/calendario">
+                <p class="home-iconlabel">Calendario</p>
+                <img width="30px" height="30px" src="static/calendar.png">
+            </a>
+          </div>
+          <div class="home-icon">
+            <a class="home-iconlink" href="../fantamoto/calcolo">
+                <p class="home-iconlabel">Calcolo</p>
+                <img width="30px" height="30px" src="static/calculator.png">
+            </a>
+          </div>
+      </div>
+    </div>
+    {% if nextgara %}
+    <div class="home-formazione">
+        {% if schierata %}
+        <p style="font-weight: bold;">Hai già schierato la formazione.</p>
+        {% else %}
+        <p class="home-avviso">NON HAI ANCORA SCHIERATO LA FORMAZIONE!</p>
+        {% endif %}
+        <p class="home-avviso"><b>{{ nextgara.posto }} - {{ nextgara.data }}</b></p>
+        {% if nextgara.motoe and nextgara.sbk %}
+        <p class="home-avviso">Questa giornata ci sarà la MotoE e SBK!</p>
+        {% elif nextgara.motoe and not nextgara.sbk %}
+        <p class="home-avviso">Questa giornata ci sarà la MotoE!</p>
+        {% elif not nextgara.motoe and nextgara.sbk %}
+        <p class="home-avviso">Questa giornata ci sarà la SBK!</p>
+        {% else %}
+        <p>Questa giornata non ci sarà né la MotoE né la SBK.</p>
+        {% endif %}
+    </div>
+    <a href="fantamoto/formazione" class="btn btn-success btn-lg home-formazionebtn">Inserisci formazione</a>
+    {% else %}
+    <div class="home-finebox" style="background-color: darkblue;">
+        <p class="home-fine">Sembra che sia finita la stagione. Com'è andata?</p>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

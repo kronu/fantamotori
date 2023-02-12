@@ -1,24 +1,43 @@
 {% extends "layout.html" %}
 
-{% block title %}Calendario - Fanta Moto{% endblock %}
+{% block title %}Calendario - FantaMoto{% endblock %}
 
 {% block body %}
-<div style="background-color: blue;">
-    <p class="titoloscelta toppagina">Calendario</p>
-</div>
-<div style="margin-bottom: 10px; margin-top: 10vh;" class="imppagina">
-    <select id="box_giornate" style="margin-bottom: 20px; background-color: gainsboro;" class="form-select selezgiornata">
+<div class="imppagina">
+    <div id="cale-scroll" class="cale-scrollmenu">
         {% for giornata in giornate %}
-        <option id="{{ giornata.id }}" value="{{ giornata.id }}">{{ giornata.id }} - {{ giornata.posto }}</option>
+            {% if giornata.id == ultima %}
+            <a class="cale-opzione cale-moto" id="attivo" num="{{ forloop.counter }}" onclick="cambia_attivo(event)">{{ giornata.id }}</a>
+            {% else %}
+            <a class="cale-opzione cale-moto" num="{{ forloop.counter }}" onclick="cambia_attivo(event)">{{ giornata.id }}</a>
+            {% endif %}
         {% endfor %}
-    </select>
-    <button id="button" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 10vh;">Avanti</button>
+    </div>
+    {% for giornata in sfide %}
+    <div id="{{forloop.counter}}" class="cale-giornata">
+        {% for giorno in giornate %}
+            {% if giorno.id == forloop.parentloop.counter %}
+            <p class="cale-posto">{{ giorno.posto }}</p>
+            {% endif %}
+        {% endfor %}
+        {% for scontro in giornata %}
+        <div class="cale-scontro">
+            <a href="{{forloop.parentloop.counter}}/{{scontro.0}}-{{scontro.1}}" class="cale-pulsante">
+                {% for persona in scontro %}
+                <div class="cale-utente">
+                    {% for uno in tutti %}
+                        {% if uno.username == persona %}
+                        <img class="cale-utenteimg" src="{{ uno.immagine }}">
+                        <p>{{ persona }}</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </a>
+        </div>
+        <hr>
+        {% endfor %}
+    </div>
+    {% endfor %}
 </div>
-<script>
-    document.getElementById('button').onclick = function() {
-        g = document.getElementById("box_giornate");
-        s = g.options[g.selectedIndex].value;
-        window.location.href = "calendario/" + s;
-    }
-</script>
 {% endblock %}

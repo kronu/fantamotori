@@ -1,0 +1,133 @@
+{% extends "layout.html" %}
+
+{% block title %}Formazione - FantaMoto{% endblock %}
+
+{% block body %}
+<div class="imppagina">
+    <h1 class="form-gara">#{{ nextgara.id }} - {{ nextgara.posto }}</h1>
+    <p class="form-entro">Entro {{ nextgara.data }}</p>
+    {% if nextgara.motoe and nextgara.sbk %}
+    <p class="form-spiega" style="color: red;">8 piloti, 5 team e TM (ogni categoria, con MotoE e SBK)</p>
+    {% elif nextgara.motoe and not nextgara.sbk %}
+    <p class="form-spiega" style="color: red;">7 piloti, 4 team e TM (ogni categoria, con MotoE ma non SBK)</p>
+    {% elif not nextgara.motoe and nextgara.sbk %}
+    <p class="form-spiega" style="color: red;">7 piloti, 4 team e TM (ogni categoria, con SBK ma non MotoE)</p>
+    {% else %}
+    <p class="form-spiega">6 piloti, 3 team e TM (ogni categoria, no MotoE e no SBK)</p>
+    {% endif %}
+    <br>
+    <form method="POST" action="schieramento">
+        {% csrf_token %}
+        <div class="form-cate">
+            <div class="form-opnome">
+                <h4>Pilota</h4>
+            </div>
+            <div class="form-opcat">
+                <h6>Categoria</h6>
+            </div>
+            <div class="form-risultati">
+                <h6>Ultimi risultati</h6>
+            </div>
+        </div>
+        {% for pilota in piloti %}
+            {% if not nextgara.motoe and pilota.categoria == "MotoE" %}
+            <div class="form-opzione" style="display: none;"></div>
+            {% elif not nextgara.sbk and pilota.categoria == "SBK" %}
+            <div class="form-opzione" style="display: none;"></div>
+            {% else %}
+            <div class="form-opzione form-moto">
+                <input type="checkbox" id="form-check" name="piloti" value="{{pilota.nome}} - {{pilota.categoria}}" style="display: none">
+                <div class="form-opnome">
+                    <p>{{ pilota.nome }}</p> 
+                </div>
+                <div class="form-opcat">
+                    <p>{{ pilota.categoria }}</p>
+                </div>
+                <div class="form-risultati">
+                    <p>
+                        {% if forloop.counter == 1 %}{{ punti_piloti.0.0 }} | {{ punti_piloti.0.1 }} | {{ punti_piloti.0.2 }}
+                        {% elif forloop.counter == 2 %}{{ punti_piloti.1.0 }} | {{ punti_piloti.1.1 }} | {{ punti_piloti.1.2 }}
+                        {% elif forloop.counter == 3 %}{{ punti_piloti.2.0 }} | {{ punti_piloti.2.1 }} | {{ punti_piloti.2.2 }}
+                        {% elif forloop.counter == 4 %}{{ punti_piloti.3.0 }} | {{ punti_piloti.3.1 }} | {{ punti_piloti.3.2 }}
+                        {% elif forloop.counter == 5 %}{{ punti_piloti.4.0 }} | {{ punti_piloti.4.1 }} | {{ punti_piloti.4.2 }}
+                        {% elif forloop.counter == 6 %}{{ punti_piloti.5.0 }} | {{ punti_piloti.5.1 }} | {{ punti_piloti.5.2 }}
+                        {% elif forloop.counter == 7 %}{{ punti_piloti.6.0 }} | {{ punti_piloti.6.1 }} | {{ punti_piloti.6.2 }}
+                        {% elif forloop.counter == 8 %}{{ punti_piloti.7.0 }} | {{ punti_piloti.7.1 }} | {{ punti_piloti.7.2 }}
+                        {% elif forloop.counter == 9 %}{{ punti_piloti.8.0 }} | {{ punti_piloti.8.1 }} | {{ punti_piloti.8.2 }}
+                        {% elif forloop.counter == 10 %}{{ punti_piloti.9.0 }} | {{ punti_piloti.9.1 }} | {{ punti_piloti.9.2 }}
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+        <p class="form-cap">Capitano:</p>
+        <p class="form-capavv">N.B. Il capitano vale solo per la prima gara lunga (NO SPRINT)!</p>
+        <select name="capitan" style="margin-bottom: 5vh; width: 100%; font-size: x-large; text-align: center; border-radius: 10px; ">
+            <option selected value="0">Nessun capitano</option>
+            {% for pilota in piloti %}
+            <option value="{{ pilota.nome }}">{{ pilota.nome }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <div class="form-cate">
+            <div class="form-opnome">
+                <h4>Team</h4>
+            </div>
+            <div class="form-opcat">
+                <h6>Categoria</h6>
+            </div>
+            <div class="form-risultati">
+                <h6>Ultimi risultati</h6>
+            </div>
+        </div>
+        {% for team in teams %}
+            {% if not nextgara.motoe and team.categoria == "MotoE" %}
+            <div class="form-opzione" style="display: none"></div>
+            {% elif not nextgara.sbk and team.categoria == "SBK" %}
+            <div class="form-opzione" style="display: none"></div>
+            {% else %}
+            <div class="form-opzione form-moto">
+                <input type="checkbox" id="form-check" name="teams" value="{{team.nome}} - {{team.categoria}}" style="display: none;">
+                <div class="form-opnome">
+                    <p>{{ team.nome }}</p> 
+                </div>
+                <div class="form-opcat">
+                    <p>{{ team.categoria }}</p>
+                </div>
+                <div class="form-risultati">
+                    <p>
+                        {% if forloop.counter == 1 %}{{ punti_teams.0.0 }} | {{ punti_teams.0.1 }} | {{ punti_teams.0.2 }}
+                        {% elif forloop.counter == 2 %}{{ punti_teams.1.0 }} | {{ punti_teams.1.1 }} | {{ punti_teams.1.2 }}
+                        {% elif forloop.counter == 3 %}{{ punti_teams.2.0 }} | {{ punti_teams.2.1 }} | {{ punti_teams.2.2 }}
+                        {% elif forloop.counter == 4 %}{{ punti_teams.3.0 }} | {{ punti_teams.3.1 }} | {{ punti_teams.3.2 }}
+                        {% elif forloop.counter == 5 %}{{ punti_teams.4.0 }} | {{ punti_teams.4.1 }} | {{ punti_teams.4.2 }}
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+        <br>
+        <div class="form-cate">
+            <div class="form-opnome">
+                <h4>Team Manager</h4>
+            </div>
+            <div class="form-risultati">
+                <h6>Ultimi risultati</h6>
+            </div>
+        </div>
+        <div class="form-opzione form-moto">
+            <input type="checkbox" id="form-check" name="tm" value="{{tm.nome}}" style="display:none">
+            <div class="form-opnome">
+                <p>{{ tm.nome }}</p> 
+            </div>
+            <div class="form-risultati">
+                <p>{{ punti_tm.0 }} | {{ punti_tm.1 }} | {{ punti_tm.2 }}</p>
+            </div>
+        </div>
+        <br>
+        <button class="btn btn-primary btn-lg form-btn" type="submit">Salva formazione</button>
+    </form>
+</div>
+{% endblock %}

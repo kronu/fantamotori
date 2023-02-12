@@ -1,3 +1,4 @@
+# Nella pagina fantamotori/admin, puoi aggiungere cosa possono cambiare gli admin
 from django.contrib import admin
 from .models import Moto_giornata, Moto_formazione, Moto_piloti, Moto_punti, Moto_team, Moto_teammanager, User, Formula_giornata, Formula_formazione, Formula_piloti, Formula_punti, Formula_team, Formula_teammanager
 

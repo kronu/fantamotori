@@ -1,105 +1,560 @@
-.body {
+/* Dove lo stile delle pagine è contenuto */
+
+body {
   margin: auto;
-  font-size: 30px;
+  max-width: 1440px;
 }
 
-.titoloscelta {
-  font-size: 70px;
+.topping {
+  height: 8%;
+}
+
+.logo {
+  width: 10%;
+  margin-left: 1%;
+}
+
+.logo:after {
+  display: block;
+}
+
+.fanta {
+  color: white;
+  font-size: 150%;
+  margin-bottom: 0;
   font-weight: bold;
 }
 
-.sceltafanta {
-  border: 1px solid black;
-  height: 50vh;
-  text-align: center;
-  padding-top: 25vh;
+.next {
+  float: left;
 }
 
-.testoscelta {
-  color: white;
-  text-shadow: 0 0 15px black;
+.margin-top {
+  margin-top: 5%;
 }
 
-.toppagina {
-  color: white;
-  text-align: center;
+.white {
+  color: white !important;
 }
 
 .imppagina {
-  width: 90%;
-  margin: auto;
+  top: 10%;
+  width: 100%;
+  padding: 0 5% 0 5%;
+  position: absolute;
 }
 
-.imgutente {
+.titolo {
+  text-align: center;
+  margin: 10% 0 5% 0;
+}
+
+.scelta {
+  width: 100%;
+  height: 45%;
+  text-decoration: none;
+  color: black;
+  margin-bottom: 5%;
+}
+
+.immagine {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 5px;
+}
+
+.errore {
+  text-align: center;
+  font-size: 300%;
+  color: red;
+  margin-top: 5%;
+}
+
+.errore-img {
+  width: 200px;
+  height: 200px;
+  display: block;
+  margin: 0 auto;
+}
+
+.errore-btn {
+  width: 100%;
+  margin-top: 20%;
+}
+
+.login-errore {
+  color: red; 
+  font-size: larger;
+  font-weight: bold;
+  text-align: center;
+}
+
+.login-formspacing {
+  margin-top: 35%;
+}
+
+.login-label {
+  font-size: 150%;
+}
+
+.login-btn {
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  margin-top: 15%;
+  color: white;
+  font-size: 150%;
+}
+
+.login-sarcastico {
+  margin-top: 10%;
+  text-align: center;
+}
+
+.home-profilo {
+  text-align: center;
+}
+
+.circle-img {
+  vertical-align: middle;
+  border-radius: 50%;
+  width: 13%;
+  display: inline-block;
+  border: 1px solid grey;
+}
+
+.circle-img:after {
+  display: block;
+}
+
+.home-utente {
+  font-size: 150%;
+  display: inline-block;
+  padding: 3% 0 0 3%;
+  vertical-align: middle;
+  font-weight: bold;
+}
+
+.home-recente {
+  display: flex;
+}
+
+.home-labelrisultato {
+  margin-top: 7%;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 1px;
+}
+
+.home-risultato {
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+  font-size: 120%;
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 3%;
+  background-color: lightgray;
+}
+
+.home-classifiche {
+  display: flex;
+  margin-top: 10%;
+}
+
+.home-class {
+  flex: 1;
+}
+
+.home-classbtn {
+  width: 100%;
+  display: block;
+}
+
+.home-hidden {
+  margin-top: 1%;
+}
+
+.home-icons {
+  display: flex;
+  margin-top: 10%;
+}
+
+.home-iconcolumn {
+  flex: 1;
+}
+
+.home-icon {
+  text-align: center;
+  font-size: 120%;
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 3% 0 7% 0;
+  margin: 5% 3% 5% 3%;
+  background-color: lightgray;
+}
+
+.home-iconlink {
+  text-decoration: none;
+  color: black;
+}
+
+.home-iconlabel {
+  margin-top: 5px;
+  margin-bottom: 8px;
+}
+
+.home-formazione {
+  margin-top: 10%;
+  text-align: center;
+}
+
+.home-avviso {
+  color: red;
+  font-weight: bold;
+}
+
+.home-formazionebtn {
+  width: 100%;
+  margin-top: 3%;
+  margin-bottom: 10%;
+}
+
+.home-finebox {
+  margin-top: 10%;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.home-fine {
+  margin-top: 15%;
+  font-size: 180%;
+  color: white;
+  padding: 5% 0 5% 0;
+}
+
+.rose-box {
+  width: 100%;
+  padding: 5% 0 5% 0;
+  overflow: auto;
+}
+
+.rose-link {
+  text-decoration: none;
+  color: black;
+}
+
+.rose-img {
+  vertical-align: middle;
+  border-radius: 50%;
+  width: 13%; 
+  float: left;
+}
+
+.rose-utente {
+  float: left;
+  padding: 2% 0 0 5%;
+}
+
+.rosa-utente {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 5%;
+}
+
+.rosa-tavola {
+  text-align: center;
+  font-size: larger;
+}
+
+.rosa-testa {
+  background-color: lightgray;
+  text-align: center;
+}
+
+.cale-scrollmenu {
+  margin-top: 3%;
+  padding: 1% 0 3% 0;
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.cale-opzione {
+  display: inline-block;
+  text-align: center;
   width: 50px;
   height: 50px;
-  float: left;
+  border: 1px solid gray;
   border-radius: 50%;
-  margin-right: 20px;
+  background-color: #f0f0f0;
+  text-decoration: none;
+  font-size: 150%;
+  padding: 1.5%;
+  color: black;
 }
 
-.rosautente {
-  width: 100%;
-  border: 1px solid black;
-  padding: 10px 10px 10px 10px;
+.cale-moto#attivo {
+  background-color: cornflowerblue;
+  color: white;
   font-weight: bold;
 }
 
-.selezgiornata {
-  width: 100%;
+.cale-formula#attivo {
+  background-color: red;
+  color: white;
+  font-weight: bold;
+}
+
+.cale-giornata {
+  margin-top: 3%;
+}
+
+.cale-scontro {
+  padding: 3% 0 0 0;
+}
+
+.cale-pulsante {
+  display: flex;
   text-align: center;
-  height: 7vh;
-  font-weight: bold;
-  font-size: 50px;
+  text-decoration: none;
+  color: black;
 }
 
-.scontroutenti {
-  width: 100%;
-  background-color: gainsboro;
+.cale-utente {
+  flex: 1;
+}
+
+.cale-utenteimg {
+  vertical-align: middle;
+  border-radius: 50%;
+  width: 15%;
+  display: inline-block;
+  border: 1px solid grey;
+}
+
+.cale-utenteimg:after {
+  display: block;
+}
+
+.cale-posto {
   text-align: center;
-  font-size: 50px;
   font-weight: bold;
+  font-size: 150%;
+  padding: 3% 0 3% 0;
 }
 
-.risultato {
-  float: left;
+.scontro-giornata {
+  text-align: center;
+  font-weight: bold;
+  font-size: 150%;
+}
+
+.scontro-box {
+  display: flex;
+}
+
+.scontro-utente {
+  flex: 1;
+  margin-top: -5%;
+  padding: 3%;
+}
+
+.scontro-nome {
+  text-align: center;
+  margin-bottom: 5%;
+}
+
+.scontro-attenzione {
+  display: block;
+  margin: auto;
   width: 50%;
-  text-align: center;
-  font-size: larger;
+  margin-top: 10%;
 }
 
-.calcgiornata {
-  width: 100%;
+.scontro-avviso {
   text-align: center;
-  height: 10vh;
+  font-size: 150%;
   font-weight: bold;
-  font-size: xx-large;
+  margin-top: 5%;
 }
 
-.formazione {
-  clear: both;
-  float: left;
-  width: 50%;
-  text-align: center;
-  font-size: larger;
-}
-
-.punti {
-  float: left;
-  width: 50%;
+.scontro-data {
   text-align: center;
 }
 
-button:hover {
-  cursor: pointer;
+.albo-anno {
+  text-align: center;
+  background-color: lightgray;
+  padding: 3% 0 3% 0;
+  border-radius: 5px;
 }
 
-a.btn-lg {
-  padding: 5%;
-  font-size: 30px;
+.albo-classifica {
+  text-align: center;
+  padding: 2% 0 2% 0;
 }
 
-button.btn-lg {
-  padding: 5%;
-  font-size: 30px;
+.calc-titolo {
+  text-align: center;
+  padding: 10% 0 5% 0;
+}
+
+.calc-label {
+  margin: 15% 0 0 0;
+}
+
+.calc-btn {
+  width: 100%;
+  padding: 5px;
+  margin: 30% 0 5% 0;
+}
+
+.form-gara {
+  text-align: center;
+}
+
+.form-entro {
+  text-align: center;
+  font-weight: bold;
+  color: red;
+  margin-bottom: 0;
+}
+
+.form-spiega {
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.form-cate {
+  background-color: lightgray;
+  margin-bottom: 2%;
+  padding: 3% 5% 5px 5%;
+  display: flex;
+  border-radius: 5px;
+  align-items: center;
+  text-align: center;
+}
+
+.form-opzione {
+  padding: 3% 5% 0 2%;
+  display: flex;
+  border: 1px solid gray;
+  border-radius: 5px;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 3px;
+}
+
+.form-opnome {
+  flex: 1;
+  font-size: 150%;
+}
+
+.form-opcat {
+  flex: 1;
+  font-size: 100%;
+}
+
+.form-cap {
+  text-align: center;
+  font-size: 150%;
+  margin-top: 2%;
+  margin-bottom: -5px;
+  font-weight: bold;
+}
+
+.form-capavv {
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.form-btn {
+  width: 100%;
+  margin-bottom: 5%;
+}
+
+.form-moto#selezionato {
+  background-color: deepskyblue;
+}
+
+.form-formula#selezionato {
+  background-color: tomato;
+}
+
+.gior-titolo {
+  text-align: center;
+  margin-bottom: 5%;
+}
+
+.gior-sotto {
+  text-align: center;
+  margin-bottom: 3px;
+}
+
+.gior-avviso {
+  text-align: center; 
+  color: red;
+  margin-bottom: 3px;
+}
+
+.gior-cat {
+  background-color: lightgray;
+  text-align: center;
+}
+
+.gior-pilota {
+  display: flex;
+  margin-bottom: 5%;
+  border: 1px solid gray;
+  padding: 3% 3% 0 3%;
+}
+
+.gior-left {
+  width: 30%;
+  margin: 0 3% 0 3%;
+}
+
+.gior-right {
+  width: 60%;
+  margin: 0 3% 3% 3%;
+}
+
+.gior-item {
+  display:inline-block;
+}
+
+.gior-btn {
+  width: 100%;
+  margin: 3% 0 5% 0;
+}
+
+#btn-calcavviso {
+  width: 100%;
+  margin-bottom: 5%;
+}
+
+.err404 {
+  display: flex;
+}
+
+.err404-imgbox {
+  width: 40%;
+  flex: 1;
+}
+
+.err404-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  overflow: hidden;
+}
+
+.err404-avviso {
+  flex: 1;
+  text-align: center;
+  color: red;
+}
+
+#errore-formula {
+  margin-bottom: 5%;
 }

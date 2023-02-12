@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+# Insieme a urls.py della cartella "fantamotori", vengono rese note tutte le pagine che verranno utilizzate dal sito
 from django.contrib import admin
 from django.urls import path, include
 

@@ -1,0 +1,1 @@
+# Anche se vuoto, serve per far funzionare Django

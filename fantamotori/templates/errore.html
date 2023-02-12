@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}Errore{% endblock %}
+
+{% block body %}
+<div class="imppagina">
+    <img class="errore-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Warning.svg/2219px-Warning.svg.png">
+    <h1 class="errore">{{ message }}</h1>
+    {% if cat == "moto" %}
+    <button id="errore-btn" value="{{cat}}" class="btn btn-primary btn-lg errore-btn">Ritorna alla home</button>
+    {% elif cat == "formula" %}
+    <button id="errore-btn" value="{{cat}}" class="btn btn-danger btn-lg errore-btn">Ritorna alla home</button>
+    {% else %}
+    <button id="errore-btn" value="{{cat}}" class="btn btn-dark btn-lg errore-btn">Ritorna alla home</button>
+    {% endif %}
+</div>
+{% endblock %}

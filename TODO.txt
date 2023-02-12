@@ -1,0 +1,9 @@
+Nei "calcolo_gara" aggiungere i team con i corrispettivi piloti,
+    per sommare i loro utente["punti_team"] insieme e assegnare la sommare
+    come punti totali del team.
+Nei "calcolo_gara" aggiungere i team manager con i corrispettivi piloti,
+    per controllare se i loro utente["sprint-dnf"] sono 0, nel tal caso
+    sommare i loro utente["punti_team"] insieme, oppure far restare a 0
+    controllare poi se i loro utente["feature-dnf"] sono 0, se lo sono
+    sommare i loro utente["punti_team"] insieme o farli restare a 0
+    alla fine sommare i due risultati assieme ed assegnarli al Team manager.

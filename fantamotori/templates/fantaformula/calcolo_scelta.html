@@ -1,34 +1,20 @@
 {% extends "layout.html" %}
 
-{% block title %}Calcolo Giornata - Fanta Formula{% endblock %}
+{% block title %}Calcolo Giornata - FantaFormula{% endblock %}
 
 {% block body %}
-<div style="background-color: red;">
-    <p class="titoloscelta toppagina">Calcolo Giornata</p>
-</div>
 <div class="imppagina">
-    <select id="giornata" style="margin-bottom: 20px; background-color: gainsboro;" class="form-select calcgiornata">
-        <option value="0" selected>Seleziona giornata</option>
+    <h1 class="calc-titolo">
+        Ti aspetta un compito difficile, riservato a pochi ed affidabili... 
+        il calcolo dei punteggi! Sei pronto?
+    </h1>
+    <p class="calc-titolo">Per favore non sbagliare :(</p>
+    <p class="calc-label">Seleziona giornata da calcolare</p>
+    <select id="calc-select" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
         {% for giornata in giornate %}
         <option value="{{ giornata.id }}">{{giornata.id}} - {{giornata.posto}}</option>
         {% endfor %}
     </select>
-    <select id="utente" style="margin-bottom: 20px; background-color: gainsboro;" class="form-select calcgiornata">
-        <option value="0" selected>Seleziona utente</option>
-        {% for utente in utenti %}
-        <option value="{{ utente.id }}">{{utente.username}}</option>
-        {% endfor %}
-    </select>
-    <button id="button" class="btn btn-danger btn-lg" style="width: 100%;">Prosegui</button>
+    <button id="calc-btn" class="btn btn-danger btn-lg calc-btn">Prosegui</button>
 </div>
-<script>
-    document.getElementById('button').onclick = function() {
-        console.log("hello")
-        g = document.getElementById("giornata");
-        u = document.getElementById("utente");
-        id = g.options[g.selectedIndex].value;
-        utente = u.options[u.selectedIndex].value;
-        window.location.href = "calcolo_formazione/" + id + "/" + utente;
-    }
-</script>
 {% endblock %}

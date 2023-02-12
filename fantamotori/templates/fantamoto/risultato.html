@@ -1,0 +1,137 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ id }}° giornata - FantaMoto{% endblock %}
+
+{% block body %}
+<div class="imppagina">
+    <p class="scontro-giornata">{{ id }}° gara - {{ posto }}</p>
+    <br>
+    {% if not formazione1 and not piloti1 and not teams1 and not tm1 and not formazione2 and not piloti2 and not teams2 and not tm2 %}
+    <div class="scontro-box">
+        <div class="scontro-utente">
+            <h1 class="scontro-nome">{{ s1 }}</h1>
+        </div>
+        <div class="scontro-utente">
+            <h1 class="scontro-nome">{{ s2 }}</h1>
+        </div>
+    </div>
+    <img class="scontro-attenzione" src="https://upload.wikimedia.org/wikipedia/commons/1/17/Warning.svg">
+    <p class="scontro-avviso">Sfida ancora da disputare</p>
+    {% else %}
+    <div class="scontro-box">
+        <div class="scontro-utente">
+            <h1 class="scontro-nome">{{ s1 }}</h1>
+            <p class="scontro-data">{{ formazione1.data }}</p>
+            <hr>
+            {% if punti_piloti1 %}
+                {% for pilota1 in piloti1 %}
+                <p>{{ pilota1.nome }} {% if pilota1.nome == capitano1 %}(C){% endif %} |<b>
+                    {% if forloop.counter == 1 %}  {{punti_piloti1.0}}
+                    {% elif forloop.counter == 2 %}  {{punti_piloti1.1}}
+                    {% elif forloop.counter == 3 %}  {{punti_piloti1.2}}
+                    {% elif forloop.counter == 4 %}  {{punti_piloti1.3}}
+                    {% elif forloop.counter == 5 %}  {{punti_piloti1.4}}
+                    {% elif forloop.counter == 6 %}  {{punti_piloti1.5}}
+                    {% endif %}</b>
+                </p>
+                {% endfor %}
+            {% else %}
+                {% for pilota1 in piloti1 %}
+                <p>{{ pilota1.nome }} {% if pilota1.nome == capitano1 %}(C){% endif %}</p>
+                {% endfor %}
+            {% endif %}
+            <br>
+            {% if punti_teams1 %}
+                {% for team1 in teams1 %}
+                <p>{{ team1.nome }} |<b>
+                    {% if forloop.counter == 1 %}  {{punti_teams1.0}}
+                    {% elif forloop.counter == 2 %}  {{punti_teams1.1}}
+                    {% elif forloop.counter == 3 %}  {{punti_teams1.2}}
+                    {% endif %}</b>
+                </p>
+                {% endfor %}
+            {% else %}
+                {% for team1 in teams1 %}
+                <p>{{ team1.nome }}</p>
+                {% endfor %}
+            {% endif %}
+            <br>
+            {% if punti_tm1 %}
+                <p>{{ tm1 }} |<b> {{ punti_tm1 }}</b></p>
+            {% else %}
+                <p>{{ tm1 }}</p>
+            {% endif %}
+            <hr>
+            {% if formazione1.risultato == 0 %}
+            <p style="font-weight: bold; color: red">SCONFITTA</p>
+            {% elif formazione1.risultato == 1 %}
+            <p style="font-weight: bold; color: green">VITTORIA</p>
+            {% elif formazione1.risultato == 2 %}
+            <p style="font-weight: bold; color: gray">PAREGGIO</p>
+            {% endif %}
+            {% if formazione1.p_totali or formazione1.p_totali == 0 %}
+            <p style="font-weight: bold;">{{ formazione1.p_totali }} PUNTI</p>
+            {% else %}
+            <p style="font-weight: bold;">Ancora da calcolare</p>
+            {% endif %}
+        </div>
+        <div class="scontro-utente">
+            <h1 class="scontro-nome">{{ s2 }}</h1>
+            <p class="scontro-data">{{ formazione2.data }}</p>
+            <hr>
+            {% if punti_piloti2 %}
+                {% for pilota2 in piloti2 %}
+                <p>{{ pilota2.nome }} {% if pilota2.nome == capitano2 %}(C){% endif %} |<b>
+                    {% if forloop.counter == 1 %}  {{punti_piloti2.0}}
+                    {% elif forloop.counter == 2 %}  {{punti_piloti2.1}}
+                    {% elif forloop.counter == 3 %}  {{punti_piloti2.2}}
+                    {% elif forloop.counter == 4 %}  {{punti_piloti2.3}}
+                    {% elif forloop.counter == 5 %}  {{punti_piloti2.4}}
+                    {% elif forloop.counter == 6 %}  {{punti_piloti2.5}}
+                    {% endif %}</b>
+                </p>
+                {% endfor %}
+            {% else %}
+                {% for pilota2 in piloti2 %}
+                <p>{{ pilota2.nome }} {% if pilota2.nome == capitano2 %}(C){% endif %}</p>
+                {% endfor %}
+            {% endif %}
+            <br>
+            {% if punti_teams2 %}
+                {% for team2 in teams2 %}
+                <p>{{ team2.nome }} |<b>
+                    {% if forloop.counter == 1 %}  {{punti_teams2.0}}
+                    {% elif forloop.counter == 2 %}  {{punti_teams2.1}}
+                    {% elif forloop.counter == 3 %}  {{punti_teams2.2}}
+                    {% endif %}</b>
+                </p>
+                {% endfor %}
+            {% else %}
+                {% for team2 in teams2 %}
+                <p>{{ team2.nome }}</p>
+                {% endfor %}
+            {% endif %}
+            <br>
+            {% if punti_tm2 %}
+                <p>{{ tm2 }} |<b> {{ punti_tm2 }}</b></p>
+            {% else %}
+                <p>{{ tm2 }}</p>
+            {% endif %}
+            <hr>
+            {% if formazione2.risultato == 0 %}
+            <p style="font-weight: bold; color: red">SCONFITTA</p>
+            {% elif formazione2.risultato == 1 %}
+            <p style="font-weight: bold; color: green">VITTORIA</p>
+            {% elif formazione2.risultato == 2 %}
+            <p style="font-weight: bold; color: gray">PAREGGIO</p>
+            {% endif %}
+            {% if formazione2.p_totali or formazione2.p_totali == 0 %}
+            <p style="font-weight: bold;">{{ formazione2.p_totali }} PUNTI</p>
+            {% else %}
+            <p style="font-weight: bold;">Ancora da calcolare</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

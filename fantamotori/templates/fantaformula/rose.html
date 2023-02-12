@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}Rose - FantaFormula{% endblock %}
+
+{% block body %}
+<div class="imppagina">
+    {% for uno in tutti %}
+    <div class="rose-box">
+        <a class="rose-link" href="{% url 'fantaformula/rosautente' uno.username %}">
+            <img class="rose-img" src="{{ uno.immagine }}">
+            <h1 class="rose-utente">{{ uno.username }}</h1>
+        </a>
+    </div>
+    <hr>
+    {% endfor %}
+<div>
+{% endblock %}
