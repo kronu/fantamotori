@@ -2533,7 +2533,7 @@ def formula_rose(request):
     tutti = User.objects.order_by("username")
     formula_tutti = []
     for uno in tutti:
-        if uno.id != 6 and uno.id != 9:
+        if uno.id != 6 and uno.id != 10:
             formula_tutti.append(uno)
     return render(request, "fantaformula/rose.html", {
         "tutti": formula_tutti,
@@ -2594,7 +2594,7 @@ def formula_calendario(request):
     tutti = User.objects.order_by("username")
     formula_tutti = []
     for uno in tutti:
-        if uno.id != 6 and uno.id != 9:
+        if uno.id != 6 and uno.id != 10:
             formula_tutti.append(uno)
     return render(request, "fantaformula/calendario.html", {
         "giornate": giornate,
@@ -2634,7 +2634,7 @@ def formula_scontro(request, id, scontro):
         teams1 = formazione1.team.all()
         tm1 = formazione1.teammanager.nome
         # Se la formazione è già stata calcolata, carica i punti ottenuti da piloti,team, tm
-        # Seleziona i punteggi da Moto_piloti e consegnali in una lista
+        # Seleziona i punteggi da Formula_piloti e consegnali in una lista
         # Fa schifo ma non ho assolutamente idea di come farlo diversamente
         punti_piloti1 = []
         for pilota1 in piloti1:
@@ -2870,7 +2870,7 @@ def formula_albo(request):
         })
     s_ranking = Formula_passato.objects.order_by("-ex_pscontri", "-ex_differenza")
     p_ranking = Formula_passato.objects.order_by("-ex_pgenerali", "-ex_differenza")
-    return render(request, "fantamoto/albodoro.html", {
+    return render(request, "fantaformula/albodoro.html", {
         "s_ranking": s_ranking,
         "p_ranking": p_ranking,
         "cat": "formula"
@@ -3102,14 +3102,14 @@ def formula_schieramento(request):
                 categorie_teams.append(team.split(" - ")[1])
             if "F1" not in categorie_teams and "F2" not in categorie_teams:
                 return render(request, "errore.html", {
-                    "message": "FORMAZIONE NON SCHIERATA: SELEZIONA UN TEAM DI OGNI CATEGORIA, MotoE INCLUSA.",
+                    "message": "FORMAZIONE NON SCHIERATA: SELEZIONA UN TEAM DI OGNI CATEGORIA, Formula2 INCLUSA.",
                     "cat": "formula"
                 })
         # Se arrivati fin qui, la formazione non presenta errori
         # Se una formazione è già stata schierata, elimina la vecchia
         if Formula_formazione.objects.filter(giornata=nextgara.id, username=request.user.username):
             Formula_formazione.objects.filter(giornata=nextgara.id, username=request.user.username).delete()
-        # Variabili da inserire nell'oggetto Moto_formazione
+        # Variabili da inserire nell'oggetto Formula_formazione
         formazione_giornata = nextgara.id
         formazione_data = now
         formazione_piloti = []
@@ -3126,7 +3126,7 @@ def formula_schieramento(request):
         formazione_tm = Formula_teammanager.objects.get(nome=tm)
         formazione_user = request.user
         # Salva la formazione nel database
-        formazione = Moto_formazione.objects.create(
+        formazione = Formula_formazione.objects.create(
             giornata = formazione_giornata,
             data = formazione_data,
             teammanager = formazione_tm,
@@ -3157,7 +3157,7 @@ def formula_calcoloscelta(request):
     utenti = User.objects.all()
     formula_tutti = []
     for uno in utenti:
-        if uno.id != 6 and uno.id != 9:
+        if uno.id != 6 and uno.id != 10:
             formula_tutti.append(uno)
     return render(request, "fantaformula/calcolo_scelta.html", {
         "giornate": giornate,
@@ -3195,7 +3195,7 @@ def formula_calcologara(request, id):
         utenti = [user for user in User.objects.all()]
         formula_tutti = []
         for uno in utenti:
-            if uno.id != 6 and uno.id != 9:
+            if uno.id != 6 and uno.id != 10:
                 formula_tutti.append(uno)
         # Cambia la variabile che mi scoccia cambiare tutte le istanze di "utenti"
         utenti = formula_tutti
@@ -3456,6 +3456,8 @@ def formula_calcologara(request, id):
                     utente["punti_team"] += 1
                 if utente["sprint-fl"]:
                     utente["punti"] += 1
+            else:
+                fuori_sprint.append(utente["nome"])
             # Feature
             if not utente["feature-dnf"]:
                 if utente["feature"] == 1:
@@ -3490,6 +3492,8 @@ def formula_calcologara(request, id):
                     utente["punti_team"] += 1
                 if utente["feature-fl"]:
                     utente["punti"] += 1
+            else:
+                fuori_feature.append(utente["nome"])
             if utente["qualifica"] in [1,2,3]:
                 match utente["qualifica"]:
                     case 1: utente["punti"] += 5
@@ -3597,11 +3601,122 @@ def formula_calcologara(request, id):
                 pilota.save()
         
         # Assegna i punteggi ai team e tm
-        # TODO
-        # Fai lista dei team con dentro i nomi dei piloti
         # Ai team basta sommare i due utente["punti_team"] dei due piloti
-        # Ai tm bisogna controllare che nessuno dei sia caduto nella STESSA gara
+        global team_formula
+        # Per ogni team in tutte le categorie
+        for team in team_formula:
+            team_punti = 0
+            team_piloti = team["piloti"].split("/") # Ritorna ["Bottas", "Zhou"]
+            # Cerca Bottas poi Zhou
+            for pilota in team_piloti:
+                # Per ogni salvataggio nella categoria giusta
+                for utenza in tutti[team["cat"]]:
+                    # Se il nome è Bottas, assegna i punti_team al team
+                    if utenza["nome"] == pilota:
+                        team_punti += utenza["punti_team"]
+            # Assegna i punti nel database
+            team_nome = Formula_team.objects.get(nome=team["nome"])
+            match int(id):
+                case 1: team_nome.gara01 = team_punti
+                case 2: team_nome.gara02 = team_punti
+                case 3: team_nome.gara03 = team_punti
+                case 4: team_nome.gara04 = team_punti
+                case 5: team_nome.gara05 = team_punti
+                case 6: team_nome.gara06 = team_punti
+                case 7: team_nome.gara07 = team_punti
+                case 8: team_nome.gara08 = team_punti
+                case 9: team_nome.gara09 = team_punti
+                case 10: team_nome.gara10 = team_punti
+                case 11: team_nome.gara11 = team_punti
+                case 12: team_nome.gara12 = team_punti
+                case 13: team_nome.gara13 = team_punti
+                case 14: team_nome.gara14 = team_punti
+                case 15: team_nome.gara15 = team_punti
+                case 16: team_nome.gara16 = team_punti
+                case 17: team_nome.gara17 = team_punti
+                case 18: team_nome.gara18 = team_punti
+                case 19: team_nome.gara19 = team_punti
+                case 20: team_nome.gara20 = team_punti
+                case 21: team_nome.gara21 = team_punti
+                case 22: team_nome.gara22 = team_punti
+                case 23: team_nome.gara23 = team_punti
+            team_nome.totale += team_punti
+            team_nome.save()
+
+        # Ai tm bisogna controllare che nessuno dei due sia DNF nella STESSA gara
         # Sprint e Feature sono considerate gare differenti!
+        global tm_formula
+        for team_manager in tm_formula:
+            segna_sprint = 0
+            segna_feature = 0
+            posizione_sprint = []
+            posizione_feature = []
+            tm_punti = 0
+            tm_piloti = team_manager["piloti"].split("/")
+            # Cerca i piloti trovati in formula1
+            for pilota in tm_piloti:
+                for utenza in tutti["f1"]:
+                    if utenza["nome"] == pilota:
+                        # Assicurarsi che non sia DNF
+                        # Sprint e Feature sono gare distinte
+                        if pilota not in fuori_sprint:
+                            segna_sprint += 1
+                            posizione_sprint.append(utenza["sprint"])
+                        if pilota not in fuori_feature:
+                            segna_feature += 1
+                            posizione_feature.append(utenza["feature"])
+            # Se entrambi i piloti non sono DNF, assegna i punti
+            if segna_sprint == 2:
+                for posizione in posizione_sprint:
+                    match posizione:
+                        case 1: tm_punti += 8
+                        case 2: tm_punti += 7
+                        case 3: tm_punti += 6
+                        case 4: tm_punti += 5
+                        case 5: tm_punti += 4
+                        case 6: tm_punti += 3
+                        case 7: tm_punti += 2
+                        case 8: tm_punti += 1
+            if segna_feature == 2:
+                for posizione in posizione_feature:
+                    match posizione:
+                        case 1: tm_punti += 25
+                        case 2: tm_punti += 18
+                        case 3: tm_punti += 15
+                        case 4: tm_punti += 12
+                        case 5: tm_punti += 10
+                        case 6: tm_punti += 8
+                        case 7: tm_punti += 6
+                        case 8: tm_punti += 4
+                        case 9: tm_punti += 2
+                        case 10: tm_punti += 1
+            tm_nome = Formula_teammanager.objects.get(nome=team_manager["nome"])
+            match int(id):
+                case 1: tm_nome.gara01 = tm_punti
+                case 2: tm_nome.gara02 = tm_punti
+                case 3: tm_nome.gara03 = tm_punti
+                case 4: tm_nome.gara04 = tm_punti
+                case 5: tm_nome.gara05 = tm_punti
+                case 6: tm_nome.gara06 = tm_punti
+                case 7: tm_nome.gara07 = tm_punti
+                case 8: tm_nome.gara08 = tm_punti
+                case 9: tm_nome.gara09 = tm_punti
+                case 10: tm_nome.gara10 = tm_punti
+                case 11: tm_nome.gara11 = tm_punti
+                case 12: tm_nome.gara12 = tm_punti
+                case 13: tm_nome.gara13 = tm_punti
+                case 14: tm_nome.gara14 = tm_punti
+                case 15: tm_nome.gara15 = tm_punti
+                case 16: tm_nome.gara16 = tm_punti
+                case 17: tm_nome.gara17 = tm_punti
+                case 18: tm_nome.gara18 = tm_punti
+                case 19: tm_nome.gara19 = tm_punti
+                case 20: tm_nome.gara20 = tm_punti
+                case 21: tm_nome.gara21 = tm_punti
+                case 22: tm_nome.gara22 = tm_punti
+                case 23: tm_nome.gara23 = tm_punti
+            tm_nome.totale += tm_punti
+            tm_nome.save()
 
         # Calcola il punteggio di ogni formazione
         for formazione in formazioni:
