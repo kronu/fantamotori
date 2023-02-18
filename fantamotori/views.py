@@ -2929,9 +2929,9 @@ def formula_formazione(request):
                 case 22: punti_g = Formula_piloti.objects.get(nome=pilota.nome).gara22
                 case 23: punti_g = Formula_piloti.objects.get(nome=pilota.nome).gara23
             # Aggiungi punti delle ultime tre giornate
-            if punti_g:
+            try:
                 punti_pilota.append(punti_g)
-            else:
+            except:
                 punti_pilota.append("-")
         # Aggiungi pilota ai piloti
         punti_piloti.append(punti_pilota)
@@ -2965,9 +2965,9 @@ def formula_formazione(request):
                 case 22: punti_g = Formula_team.objects.get(nome=team.nome).gara22
                 case 23: punti_g = Formula_team.objects.get(nome=team.nome).gara23
             # Aggiungi punti delle ultime tre giornate
-            if punti_g:
+            try:
                 punti_team.append(punti_g)
-            else:
+            except:
                 punti_team.append("-")
         # Aggiungi team ai teams
         punti_teams.append(punti_team)
@@ -2998,9 +2998,9 @@ def formula_formazione(request):
             case 21: punti_g = Formula_teammanager.objects.get(nome=tm.nome).gara21
             case 22: punti_g = Formula_teammanager.objects.get(nome=tm.nome).gara22
             case 23: punti_g = Formula_teammanager.objects.get(nome=tm.nome).gara23
-        if punti_g:
+        try:
             punti_tm.append(punti_g)
-        else:
+        except:
             punti_tm.append("-")
     return render(request, "fantaformula/formazione.html", {
         "piloti": piloti,
