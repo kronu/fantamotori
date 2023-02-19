@@ -1616,7 +1616,7 @@ def moto_calcologara(request, id):
                     utente["punti_team"] += 1
             # Se non cade, dai punti giro veloce splo al pilota
                 if utente["feature-fl"]:
-                    utente["punti"] += 1
+                    utente["punti"] += 2
             # Indifferentemente se cade o meno, assegna solo al pilota i punti della qualifica
             if utente["qualifica"] in [1, 2, 3]:
                 match utente["qualifica"]:
@@ -1672,7 +1672,7 @@ def moto_calcologara(request, id):
                     utente["punti"] += 1
                     utente["punti_team"] += 1
                 if utente["feature-fl"]:
-                    utente["punti"] += 1
+                    utente["punti"] += 2
             if utente["qualifica"] in [1,2,3]:
                 match utente["qualifica"]:
                     case 1: utente["punti"] += 5
@@ -1713,7 +1713,7 @@ def moto_calcologara(request, id):
                     utente["punti"] += 1
                     utente["punti_team"] += 1
                 if utente["sprint-fl"]:
-                    utente["punti"] += 1
+                    utente["punti"] += 2
             else:
                 caduti_sprint.append(utente["nome"])
             # Feature
@@ -1764,7 +1764,7 @@ def moto_calcologara(request, id):
                     utente["punti"] += 1
                     utente["punti_team"] += 1
                 if utente["feature-fl"]:
-                    utente["punti"] += 1
+                    utente["punti"] += 2
             else:
                 caduti_feature.append(utente["nome"])
             if utente["qualifica"] in [1,2,3]:
@@ -1823,7 +1823,7 @@ def moto_calcologara(request, id):
                         utente["punti"] += 1
                         utente["punti_team"] += 1
                     if utente["gara1-fl"]:
-                        utente["punti"] += 1
+                        utente["punti"] += 2
                 # Gara 2
                 if not utente["gara2-dnf"]:
                     if utente["gara2"] == 1:
@@ -1872,7 +1872,7 @@ def moto_calcologara(request, id):
                         utente["punti"] += 1
                         utente["punti_team"] += 1
                     if utente["gara2-fl"]:
-                        utente["punti"] += 1
+                        utente["punti"] += 2
                 if utente["qualifica"] in [1,2,3]:
                     match utente["qualifica"]:
                         case 1: utente["punti"] += 5
@@ -1929,7 +1929,7 @@ def moto_calcologara(request, id):
                         utente["punti"] += 1
                         utente["punti_team"] += 1
                     if utente["gara1-fl"]:
-                        utente["punti"] += 1
+                        utente["punti"] += 2
                 # Gara 2
                 if not utente["gara2-dnf"]:
                     if utente["gara2"] == 1:
@@ -1978,7 +1978,7 @@ def moto_calcologara(request, id):
                         utente["punti"] += 1
                         utente["punti_team"] += 1
                     if utente["gara2-fl"]:
-                        utente["punti"] += 1
+                        utente["punti"] += 2
                 # Super Pole
                 if not utente["super-dnf"]:
                     if utente["super"] == 1:
