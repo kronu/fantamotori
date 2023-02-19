@@ -324,7 +324,8 @@ team_moto = [
     {"nome": "RNF Racing (MotoE)", "piloti": "Mantovani/Perez", "cat": "motoe"},
     {"nome": "SIC58 Squadra (MotoE)", "piloti": "Zannoni/Manfredi", "cat": "motoe"},
     {"nome": "Pons Racing", "piloti": "Casadei/Spinelli", "cat": "motoe"},
-    {"nome": "Pramac Racing (MotoE)", "piloti": "Salvadori/Rabat", "cat": "motoe"},
+    {"nome": "Pramac Racing (MotoE)(1)", "piloti": "Salvadori/Rabat", "cat": "motoe"},
+    {"nome": "Pramac Racing (MotoE)(2)", "piloti": "Salvadori/Rabat", "cat": "motoe"},
     {"nome": "Ducati (SBK)", "piloti": "Bautista/Rinaldi", "cat": "sbk"},
     {"nome": "GoEleven", "piloti": "Oettl", "cat": "sbk"},
     {"nome": "HRC Honda", "piloti": "Lecuona/Vierge", "cat": "sbk"},
@@ -729,9 +730,9 @@ def moto_formazione(request):
             nextdate = date
             break
     nextgara = Moto_giornata.objects.get(data=nextdate)
-    piloti = Moto_piloti.objects.filter(utente_id=request.user.id)
-    teams = Moto_team.objects.filter(utente_id=request.user.id)
-    tm = Moto_teammanager.objects.get(utente_id=request.user.id)
+    piloti = Moto_piloti.objects.filter(username=request.user.username)
+    teams = Moto_team.objects.filter(username=request.user.username)
+    tm = Moto_teammanager.objects.get(username=request.user.username)
     # Ottieni gli ultimi tre risultati
     # Altro obrobrio, ma occhio non vede cuore non duole
     ultime = [nextgara.id - 1, nextgara.id - 2, nextgara.id - 3]
@@ -764,9 +765,9 @@ def moto_formazione(request):
                 case 22: punti_g = Moto_piloti.objects.get(nome=pilota.nome).gara22
                 case 23: punti_g = Moto_piloti.objects.get(nome=pilota.nome).gara23
             # Aggiungi punti delle ultime tre giornate
-            if punti_g:
+            try:
                 punti_pilota.append(punti_g)
-            else:
+            except:
                 punti_pilota.append("-")
         # Aggiungi pilota ai piloti
         punti_piloti.append(punti_pilota)
@@ -800,9 +801,9 @@ def moto_formazione(request):
                 case 22: punti_g = Moto_team.objects.get(nome=team.nome).gara22
                 case 23: punti_g = Moto_team.objects.get(nome=team.nome).gara23
             # Aggiungi punti delle ultime tre giornate
-            if punti_g:
+            try:
                 punti_team.append(punti_g)
-            else:
+            except:
                 punti_team.append("-")
         # Aggiungi team ai teams
         punti_teams.append(punti_team)
@@ -833,9 +834,9 @@ def moto_formazione(request):
             case 21: punti_g = Moto_teammanager.objects.get(nome=tm.nome).gara21
             case 22: punti_g = Moto_teammanager.objects.get(nome=tm.nome).gara22
             case 23: punti_g = Moto_teammanager.objects.get(nome=tm.nome).gara23
-        if punti_g:
+        try:
             punti_tm.append(punti_g)
-        else:
+        except:
             punti_tm.append("-")
     return render(request, "fantamoto/formazione.html", {
         "piloti": piloti,
@@ -2894,9 +2895,9 @@ def formula_formazione(request):
             nextdate = date
             break
     nextgara = Formula_giornata.objects.get(data=nextdate)
-    piloti = Formula_piloti.objects.filter(utente_id=request.user.id)
-    teams = Formula_team.objects.filter(utente_id=request.user.id)
-    tm = Formula_teammanager.objects.get(utente_id=request.user.id)
+    piloti = Formula_piloti.objects.filter(username=request.user.username)
+    teams = Formula_team.objects.filter(username=request.user.username)
+    tm = Formula_teammanager.objects.get(username=request.user.username)
     # Ottieni gli ultimi tre risultati
     # Altro obrobrio, ma occhio non vede cuore non duole
     ultime = [nextgara.id - 1, nextgara.id - 2, nextgara.id - 3]
