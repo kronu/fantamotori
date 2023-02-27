@@ -736,6 +736,10 @@ def moto_formazione(request):
     # Ottieni gli ultimi tre risultati
     # Altro obrobrio, ma occhio non vede cuore non duole
     ultime = [nextgara.id - 1, nextgara.id - 2, nextgara.id - 3]
+    # Non prendere id giornate negativo o zero
+    for i in range(3):
+        if ultime[i] == 0 or ultime[i] < 0:
+            ultime[i] = 0
     punti_piloti = []
     for pilota in piloti:
         punti_pilota = []
@@ -764,6 +768,7 @@ def moto_formazione(request):
                 case 21: punti_g = Moto_piloti.objects.get(nome=pilota.nome).gara21
                 case 22: punti_g = Moto_piloti.objects.get(nome=pilota.nome).gara22
                 case 23: punti_g = Moto_piloti.objects.get(nome=pilota.nome).gara23
+                case _: punti_g = "-"
             # Aggiungi punti delle ultime tre giornate
             try:
                 punti_pilota.append(punti_g)
@@ -800,6 +805,7 @@ def moto_formazione(request):
                 case 21: punti_g = Moto_team.objects.get(nome=team.nome).gara21
                 case 22: punti_g = Moto_team.objects.get(nome=team.nome).gara22
                 case 23: punti_g = Moto_team.objects.get(nome=team.nome).gara23
+                case _: punti_g = "-"
             # Aggiungi punti delle ultime tre giornate
             try:
                 punti_team.append(punti_g)
@@ -834,6 +840,7 @@ def moto_formazione(request):
             case 21: punti_g = Moto_teammanager.objects.get(nome=tm.nome).gara21
             case 22: punti_g = Moto_teammanager.objects.get(nome=tm.nome).gara22
             case 23: punti_g = Moto_teammanager.objects.get(nome=tm.nome).gara23
+            case _: punti_g = "-"
         try:
             punti_tm.append(punti_g)
         except:
@@ -2901,6 +2908,10 @@ def formula_formazione(request):
     # Ottieni gli ultimi tre risultati
     # Altro obrobrio, ma occhio non vede cuore non duole
     ultime = [nextgara.id - 1, nextgara.id - 2, nextgara.id - 3]
+    # Non prendere id giornate negativo o zero
+    for i in range(3):
+        if ultime[i] == 0 or ultime[i] < 0:
+            ultime[i] = 0
     punti_piloti = []
     for pilota in piloti:
         punti_pilota = []
@@ -2929,6 +2940,7 @@ def formula_formazione(request):
                 case 21: punti_g = Formula_piloti.objects.get(nome=pilota.nome).gara21
                 case 22: punti_g = Formula_piloti.objects.get(nome=pilota.nome).gara22
                 case 23: punti_g = Formula_piloti.objects.get(nome=pilota.nome).gara23
+                case _: punti_g = "-"
             # Aggiungi punti delle ultime tre giornate
             try:
                 punti_pilota.append(punti_g)
@@ -2965,6 +2977,7 @@ def formula_formazione(request):
                 case 21: punti_g = Formula_team.objects.get(nome=team.nome).gara21
                 case 22: punti_g = Formula_team.objects.get(nome=team.nome).gara22
                 case 23: punti_g = Formula_team.objects.get(nome=team.nome).gara23
+                case _: punti_g = "-"
             # Aggiungi punti delle ultime tre giornate
             try:
                 punti_team.append(punti_g)
@@ -2999,6 +3012,7 @@ def formula_formazione(request):
             case 21: punti_g = Formula_teammanager.objects.get(nome=tm.nome).gara21
             case 22: punti_g = Formula_teammanager.objects.get(nome=tm.nome).gara22
             case 23: punti_g = Formula_teammanager.objects.get(nome=tm.nome).gara23
+            case _: punti_g = "-"
         try:
             punti_tm.append(punti_g)
         except:
