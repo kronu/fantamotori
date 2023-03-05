@@ -1055,7 +1055,7 @@ def moto_schieramento(request):
 
 @login_required
 def moto_calcoloscelta(request):
-    autorizzati = [1, 3]
+    autorizzati = [1, 2, 3, 7]
     if request.user.id not in autorizzati:
         return render(request, "errore.html", {
             "message": "Non sei autorizzato al calcolo delle giornate",
@@ -1071,7 +1071,7 @@ def moto_calcoloscelta(request):
 @login_required
 def moto_calcologara(request, id):
     # Se non autorizzati, mostra errore
-    autorizzati = [1, 3]
+    autorizzati = [1, 2, 3, 7]
     if request.user.id not in autorizzati:
         return render(request, "errore.html", {
             "message": "Non sei autorizzato al calcolo delle giornate",
@@ -3170,7 +3170,7 @@ def formula_calcoloscelta(request):
             "message": "Non partecipi al FantaFormula.",
             "cat": "formula"
         })
-    autorizzati = [1, 3]
+    autorizzati = [1, 2, 3, 7]
     if request.user.id not in autorizzati:
         return render(request, "errore.html", {
             "message": "Non sei autorizzato al calcolo delle giornate",
@@ -3198,7 +3198,7 @@ def formula_calcologara(request, id):
             "cat": "formula"
         })
     # Accesso solo agli autorizzati
-    autorizzati = [1, 3]
+    autorizzati = [1, 2, 3, 7]
     if request.user.id not in autorizzati:
         return render(request, "errore.html", {
             "message": "Non sei autorizzato al calcolo delle giornate",
