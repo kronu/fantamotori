@@ -49,7 +49,7 @@ class Moto_piloti(models.Model):
     gara21 = models.IntegerField(blank=True, null=True)
     gara22 = models.IntegerField(blank=True, null=True)
     gara23 = models.IntegerField(blank=True, null=True)
-    totale = models.IntegerField(blank=True, null=True)
+    totale = models.IntegerField(default=0)
 
 
 class Moto_team(models.Model):
@@ -80,7 +80,7 @@ class Moto_team(models.Model):
     gara21 = models.IntegerField(blank=True, null=True)
     gara22 = models.IntegerField(blank=True, null=True)
     gara23 = models.IntegerField(blank=True, null=True)
-    totale = models.IntegerField(blank=True, null=True)
+    totale = models.IntegerField(default=0)
 
 
 class Moto_teammanager(models.Model):
@@ -110,7 +110,7 @@ class Moto_teammanager(models.Model):
     gara21 = models.IntegerField(blank=True, null=True)
     gara22 = models.IntegerField(blank=True, null=True)
     gara23 = models.IntegerField(blank=True, null=True)
-    totale = models.IntegerField(blank=True, null=True)
+    totale = models.IntegerField(default=0)
 
 
 class Moto_formazione(models.Model):
@@ -179,7 +179,7 @@ class Formula_piloti(models.Model):
     gara21 = models.IntegerField(blank=True, null=True)
     gara22 = models.IntegerField(blank=True, null=True)
     gara23 = models.IntegerField(blank=True, null=True)
-    totale = models.IntegerField(blank=True, null=True)
+    totale = models.IntegerField(default=0)
 
 
 class Formula_team(models.Model):
@@ -210,7 +210,7 @@ class Formula_team(models.Model):
     gara21 = models.IntegerField(blank=True, null=True)
     gara22 = models.IntegerField(blank=True, null=True)
     gara23 = models.IntegerField(blank=True, null=True)
-    totale = models.IntegerField(blank=True, null=True)
+    totale = models.IntegerField(default=0)
 
 
 class Formula_teammanager(models.Model):
@@ -240,7 +240,7 @@ class Formula_teammanager(models.Model):
     gara21 = models.IntegerField(blank=True, null=True)
     gara22 = models.IntegerField(blank=True, null=True)
     gara23 = models.IntegerField(blank=True, null=True)
-    totale = models.IntegerField(blank=True, null=True)
+    totale = models.IntegerField(default=0)
 
 
 class Formula_formazione(models.Model):

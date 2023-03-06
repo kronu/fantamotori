@@ -510,7 +510,7 @@ def moto_scontro(request, id, scontro):
                 case 21: punti_pilota1 = Moto_piloti.objects.get(nome=pilota1.nome).gara21
                 case 22: punti_pilota1 = Moto_piloti.objects.get(nome=pilota1.nome).gara22
                 case 23: punti_pilota1 = Moto_piloti.objects.get(nome=pilota1.nome).gara23
-            if punti_pilota1:
+            if punti_pilota1 or punti_pilota1 == 0:
                 punti_piloti1.append(punti_pilota1)
         # Seleziona punti dei team
         punti_teams1 = []
@@ -539,7 +539,7 @@ def moto_scontro(request, id, scontro):
                 case 21: punti_team1 = Moto_team.objects.get(nome=team1.nome).gara21
                 case 22: punti_team1 = Moto_team.objects.get(nome=team1.nome).gara22
                 case 23: punti_team1 = Moto_team.objects.get(nome=team1.nome).gara23
-            if punti_team1:
+            if punti_team1 or punti_team1 == 0:
                 punti_teams1.append(punti_team1)
         match int(id):
             case 1: punti_tm1 = Moto_teammanager.objects.get(nome=tm1).gara01
@@ -614,7 +614,7 @@ def moto_scontro(request, id, scontro):
                 case 21: punti_pilota2 = Moto_piloti.objects.get(nome=pilota2.nome).gara21
                 case 22: punti_pilota2 = Moto_piloti.objects.get(nome=pilota2.nome).gara22
                 case 23: punti_pilota2 = Moto_piloti.objects.get(nome=pilota2.nome).gara23
-            if punti_pilota2:
+            if punti_pilota2 or punti_pilota2 == 0:
                 punti_piloti2.append(punti_pilota2)
         punti_teams2 = []
         for team2 in teams2:
@@ -642,7 +642,7 @@ def moto_scontro(request, id, scontro):
                 case 21: punti_team2 = Moto_team.objects.get(nome=team2.nome).gara21
                 case 22: punti_team2 = Moto_team.objects.get(nome=team2.nome).gara22
                 case 23: punti_team2 = Moto_team.objects.get(nome=team2.nome).gara23
-            if punti_team2:
+            if punti_team2 or punti_team2 == 0:
                 punti_teams2.append(punti_team2)
         match int(id):
             case 1: punti_tm2 = Moto_teammanager.objects.get(nome=tm2).gara01
@@ -1623,7 +1623,7 @@ def moto_calcologara(request, id):
                     utente["punti_team"] += 1
             # Se non cade, dai punti giro veloce solo al pilota
                 if utente["feature-fl"]:
-                    if utente["feature"] <= 15:
+                    if utente["feature"] <= 15 and utente["feature"] != 0:
                         utente["punti"] += 2
             # Indifferentemente se cade o meno, assegna solo al pilota i punti della qualifica
             if utente["qualifica"] in [1, 2, 3]:
@@ -1680,7 +1680,7 @@ def moto_calcologara(request, id):
                     utente["punti"] += 1
                     utente["punti_team"] += 1
                 if utente["feature-fl"]:
-                    if utente["feature"] <= 15:
+                    if utente["feature"] <= 15 and utente["feature"] != 0:
                         utente["punti"] += 2
             if utente["qualifica"] in [1,2,3]:
                 match utente["qualifica"]:
@@ -1722,7 +1722,7 @@ def moto_calcologara(request, id):
                     utente["punti"] += 1
                     utente["punti_team"] += 1
                 if utente["sprint-fl"]:
-                    if utente["sprint"] <= 9:
+                    if utente["sprint"] <= 9 and utente["sprint"] != 0:
                         utente["punti"] += 2
             else:
                 caduti_sprint.append(utente["nome"])
@@ -1774,7 +1774,7 @@ def moto_calcologara(request, id):
                     utente["punti"] += 1
                     utente["punti_team"] += 1
                 if utente["feature-fl"]:
-                    if utente["feature"] <= 15:
+                    if utente["feature"] <= 15 and utente["feature"] != 0:
                         utente["punti"] += 2
             else:
                 caduti_feature.append(utente["nome"])
@@ -1834,7 +1834,7 @@ def moto_calcologara(request, id):
                         utente["punti"] += 1
                         utente["punti_team"] += 1
                     if utente["gara1-fl"]:
-                        if utente["gara1"] <= 15:
+                        if utente["gara1"] <= 15 and utente["gara1"] != 0:
                             utente["punti"] += 2
                 # Gara 2
                 if not utente["gara2-dnf"]:
@@ -1884,7 +1884,7 @@ def moto_calcologara(request, id):
                         utente["punti"] += 1
                         utente["punti_team"] += 1
                     if utente["gara2-fl"]:
-                        if utente["gara2"] <= 15:
+                        if utente["gara2"] <= 15 and utente["gara2"] != 0:
                             utente["punti"] += 2
                 if utente["qualifica"] in [1,2,3]:
                     match utente["qualifica"]:
@@ -1942,7 +1942,7 @@ def moto_calcologara(request, id):
                         utente["punti"] += 1
                         utente["punti_team"] += 1
                     if utente["gara1-fl"]:
-                        if utente["gara1"] <= 15:
+                        if utente["gara1"] <= 15 and utente["gara1"] != 0:
                             utente["punti"] += 2
                 # Gara 2
                 if not utente["gara2-dnf"]:
@@ -1992,7 +1992,7 @@ def moto_calcologara(request, id):
                         utente["punti"] += 1
                         utente["punti_team"] += 1
                     if utente["gara2-fl"]:
-                        if utente["gara2"] <= 15:
+                        if utente["gara2"] <= 15 and utente["gara2"] != 0:
                             utente["punti"] += 2
                 # Super Pole
                 if not utente["super-dnf"]:
@@ -2323,7 +2323,8 @@ def moto_calcologara(request, id):
 
         # Controlla chi hai contro e vedi chi ha vinto
         global sfide_moto
-        sfide_giornata = sfide_moto[1]["sfida"]
+        numero = int(id) - 1
+        sfide_giornata = sfide_moto[numero]["sfida"]
         sfide_giornata = sfide_giornata.split("/")
         scontri = []
         for i in sfide_giornata:
@@ -2678,7 +2679,7 @@ def formula_scontro(request, id, scontro):
                 case 21: punti_pilota1 = Formula_piloti.objects.get(nome=pilota1.nome).gara21
                 case 22: punti_pilota1 = Formula_piloti.objects.get(nome=pilota1.nome).gara22
                 case 23: punti_pilota1 = Formula_piloti.objects.get(nome=pilota1.nome).gara23
-            if punti_pilota1:
+            if punti_pilota1 or punti_pilota1 == 0:
                 punti_piloti1.append(punti_pilota1)
         # Seleziona punti dei team
         punti_teams1 = []
@@ -2707,7 +2708,7 @@ def formula_scontro(request, id, scontro):
                 case 21: punti_team1 = Formula_team.objects.get(nome=team1.nome).gara21
                 case 22: punti_team1 = Formula_team.objects.get(nome=team1.nome).gara22
                 case 23: punti_team1 = Formula_team.objects.get(nome=team1.nome).gara23
-            if punti_team1:
+            if punti_team1 or punti_team1 == 0:
                 punti_teams1.append(punti_team1)
         match int(id):
             case 1: punti_tm1 = Formula_teammanager.objects.get(nome=tm1).gara01
@@ -2782,7 +2783,7 @@ def formula_scontro(request, id, scontro):
                 case 21: punti_pilota2 = Formula_piloti.objects.get(nome=pilota2.nome).gara21
                 case 22: punti_pilota2 = Formula_piloti.objects.get(nome=pilota2.nome).gara22
                 case 23: punti_pilota2 = Formula_piloti.objects.get(nome=pilota2.nome).gara23
-            if punti_pilota2:
+            if punti_pilota2 or punti_pilota2 == 0:
                 punti_piloti2.append(punti_pilota2)
         punti_teams2 = []
         for team2 in teams2:
@@ -2810,7 +2811,7 @@ def formula_scontro(request, id, scontro):
                 case 21: punti_team2 = Formula_team.objects.get(nome=team2.nome).gara21
                 case 22: punti_team2 = Formula_team.objects.get(nome=team2.nome).gara22
                 case 23: punti_team2 = Formula_team.objects.get(nome=team2.nome).gara23
-            if punti_team2:
+            if punti_team2 or punti_team2 == 0:
                 punti_teams2.append(punti_team2)
         match int(id):
             case 1: punti_tm2 = Formula_teammanager.objects.get(nome=tm2).gara01
@@ -3478,7 +3479,7 @@ def formula_calcologara(request, id):
                     utente["punti"] += 1
                     utente["punti_team"] += 1
                 if utente["sprint-fl"]:
-                    if utente["sprint"] <= 8:
+                    if utente["sprint"] <= 8 and utente["sprint"] != 0:
                         utente["punti"] += 1
             else:
                 fuori_sprint.append(utente["nome"])
@@ -3515,7 +3516,7 @@ def formula_calcologara(request, id):
                     utente["punti"] += 1
                     utente["punti_team"] += 1
                 if utente["feature-fl"]:
-                    if utente["feature"] <= 10:
+                    if utente["feature"] <= 10 and utente["feature"] != 0:
                         utente["punti"] += 1
             else:
                 fuori_feature.append(utente["nome"])
@@ -3554,7 +3555,7 @@ def formula_calcologara(request, id):
                         utente["punti"] += 1
                         utente["punti_team"] += 1
                     if utente["sprint-fl"]:
-                        if utente["sprint"] <= 8:
+                        if utente["sprint"] <= 8 and utente["sprint"] != 0:
                             utente["punti"] += 1
                 # Feature
                 if not utente["feature-dnf"]:
@@ -3589,7 +3590,7 @@ def formula_calcologara(request, id):
                         utente["punti"] += 1
                         utente["punti_team"] += 1
                     if utente["feature-fl"]:
-                        if utente["feature"] <= 10:
+                        if utente["feature"] <= 10 and utente["feature"] != 0:
                             utente["punti"] += 1
                 if utente["qualifica"] in [1,2,3]:
                     match utente["qualifica"]:
@@ -3628,6 +3629,7 @@ def formula_calcologara(request, id):
                 pilota.save()
         
         # Assegna i punteggi ai team e tm
+        
         # Ai team basta sommare i due utente["punti_team"] dei due piloti
         global team_formula
         # Per ogni team in tutte le categorie
@@ -3841,8 +3843,8 @@ def formula_calcologara(request, id):
 
         # Controlla chi hai contro e vedi chi ha vinto
         global sfide_formula
-        sfide_giornata = sfide_formula[1]["sfida"]
-        sfide_giornata = sfide_giornata.split("/")
+        numero = int(id) - 1
+        sfide_giornata = sfide_formula[numero]["sfida"].split("/")
         scontri = []
         for i in sfide_giornata:
             scontri.append(i.split("+"))
