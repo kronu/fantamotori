@@ -312,7 +312,7 @@ team_moto = [
     {"nome": "Husqvarna Intact (Moto3)", "piloti": "Sasaki/Veijer", "cat": "moto3"},
     {"nome": "MT Helmets", "piloti": "Moreira/Azman", "cat": "moto3"},
     {"nome": "Red Bull KTM Ajo (Moto3)", "piloti": "Oncu/Rueda", "cat": "moto3"},
-    {"nome": "Red Bull KTM (Moto3)", "piloti": "Farioli", "cat": "moto3"},
+    {"nome": "Red Bull KTM (Moto3)", "piloti": "Farioli/Holgado", "cat": "moto3"},
     {"nome": "Snipers Team", "piloti": "Bertelle/Fenati", "cat": "moto3"},
     {"nome": "SIC58 Squadra (Moto3)", "piloti": "Toba/Rossi", "cat": "moto3"},
     {"nome": "Visiontrack Racing", "piloti": "Ogden/Whatley", "cat": "moto3"},
@@ -2107,7 +2107,28 @@ def moto_calcologara(request, id):
         # Ai team basta sommare i due utente["punti_team"] dei due piloti
         global team_moto
         # Per ogni team in tutte le categorie
-        for team in team_moto:
+        # Escludi le categorie che non girano questo weekend
+        questo_team_moto = []
+        questa_giornata = Moto_giornata.objects.get(id=id)
+        # Se no MotoE e SBK
+        if questa_giornata.motoe == 0 and questa_giornata.sbk == 0:
+            for team in team_moto:
+                if team["cat"] != "motoe" and team["cat"] != "sbk":
+                    questo_team_moto.append(team)
+        # Se no MotoE ma SBK
+        if questa_giornata.motoe == 0 and questa_giornata.sbk:
+            for team in team_moto:
+                if team["cat"] != "motoe":
+                    questo_team_moto.append(team)
+        # Se no SBK ma MotoE
+        if questa_giornata.motoe and questa_giornata.sbk == 0:
+            for team in team_moto:
+                if team["cat"] != "sbk":
+                    questo_team_moto.append(team)
+        # Se entrambe
+        if questa_giornata.motoe and questa_giornata.sbk:
+            questo_team_moto = team_moto
+        for team in questo_team_moto:
             team_punti = 0
             team_piloti = team["piloti"].split("/") # Ritorna ["Fernandez A.", "Gardner"]
             # Cerca Fernandez A. poi Gardner
