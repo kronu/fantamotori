@@ -2534,6 +2534,7 @@ def formula_home(request):
     # Cerca ultimo risultato, se prima gara, ritorna None
     try:
         dataultimagara = max(data for data in alldates if data < now)
+        print(dataultimagara)
         ultimagara = Formula_giornata.objects.get(data=dataultimagara)
     except:
         ultimagara = None
@@ -3647,8 +3648,9 @@ def formula_calcologara(request, id):
                     case 21: pilota.gara21 = utente["punti"]
                     case 22: pilota.gara22 = utente["punti"]
                     case 23: pilota.gara23 = utente["punti"]
+                pilota.totale += utente["punti"]
                 pilota.save()
-        
+
         # Assegna i punteggi ai team e tm
         
         # Ai team basta sommare i due utente["punti_team"] dei due piloti
