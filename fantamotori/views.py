@@ -462,6 +462,8 @@ def moto_calendario(request):
 @login_required
 def moto_scontro(request, id, scontro):
     posto = Moto_giornata.objects.get(id=id).posto
+    se_sbk = Moto_giornata.objects.get(id=id).sbk
+    se_motoe = Moto_giornata.objects.get(id=id).motoe
     # Separa i nomi nella sfida e ottieni gli utente_id
     sfidante1, sfidante2 = scontro.split("-")
     id_sfidante1 = User.objects.get(username=sfidante1).id
@@ -2116,17 +2118,17 @@ def moto_calcologara(request, id):
                 if team["cat"] != "motoe" and team["cat"] != "sbk":
                     questo_team_moto.append(team)
         # Se no MotoE ma SBK
-        if questa_giornata.motoe == 0 and questa_giornata.sbk:
+        elif questa_giornata.motoe == 0 and questa_giornata.sbk:
             for team in team_moto:
                 if team["cat"] != "motoe":
                     questo_team_moto.append(team)
         # Se no SBK ma MotoE
-        if questa_giornata.motoe and questa_giornata.sbk == 0:
+        elif questa_giornata.motoe and questa_giornata.sbk == 0:
             for team in team_moto:
                 if team["cat"] != "sbk":
                     questo_team_moto.append(team)
         # Se entrambe
-        if questa_giornata.motoe and questa_giornata.sbk:
+        elif questa_giornata.motoe and questa_giornata.sbk:
             questo_team_moto = team_moto
         for team in questo_team_moto:
             team_punti = 0
