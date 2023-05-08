@@ -3470,7 +3470,6 @@ def formula_calcologara(request, id):
             tutti = {
                 "f1": tutti_f1
             }
-        
         # È arrivato il momento di calcolare
         # Formula1, liste per controllare i DNF e quindi i Team Manager
         fuori_sprint = []
@@ -3661,13 +3660,18 @@ def formula_calcologara(request, id):
         for team in team_formula:
             team_punti = 0
             team_piloti = team["piloti"].split("/") # Ritorna ["Bottas", "Zhou"]
-            # Cerca Bottas poi Zhou
             for pilota in team_piloti:
-                # Per ogni salvataggio nella categoria giusta
-                for utenza in tutti[team["cat"]]:
-                    # Se il nome è Bottas, assegna i punti_team al team
-                    if utenza["nome"] == pilota:
-                        team_punti += utenza["punti_team"]
+                if se_f2:
+                    # Per ogni salvataggio nella categoria giusta (F1 o F2)
+                    for utenza in tutti[team["cat"]]:
+                        # Se il nome è Bottas, assegna i punti_team al team
+                        if utenza["nome"] == pilota:
+                            team_punti += utenza["punti_team"]
+                else:
+                    # Solo F1
+                    for utenza in tutti["f1"]:
+                        if utenza["nome"] == pilota:
+                            team_punti += utenza["punti_team"]
             # Assegna i punti nel database
             team_nome = Formula_team.objects.get(nome=team["nome"])
             match int(id):

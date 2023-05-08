@@ -53,7 +53,7 @@
                 {% endfor %}
             {% endif %}
             <br>
-            {% if punti_tm1 %}
+            {% if punti_tm1 or punti_tm1 == 0 %}
                 <p>{{ tm1 }} |<b> {{ punti_tm1 }}</b></p>
             {% else %}
                 <p>{{ tm1 }}</p>
@@ -106,7 +106,7 @@
                 {% endfor %}
             {% endif %}
             <br>
-            {% if punti_tm2 %}
+            {% if punti_tm2 or punti_tm2 == 0 %}
                 <p>{{ tm2 }} |<b> {{ punti_tm2 }}</b></p>
             {% else %}
                 <p>{{ tm2 }}</p>
