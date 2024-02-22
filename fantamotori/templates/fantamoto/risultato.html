@@ -25,7 +25,7 @@
             <hr>
             {% if punti_piloti1 %}
                 {% for pilota1 in piloti1 %}
-                <p>{{ pilota1.nome }} {% if pilota1.nome == capitano1 %}(C){% endif %} |<b>
+                <p>{{ pilota1.nome }} {% if pilota1.nome == capitano1 %}(C{{garacap1}}){% endif %} |<b>
                     {% if forloop.counter == 1 %}  {{punti_piloti1.0}}
                     {% elif forloop.counter == 2 %}  {{punti_piloti1.1}}
                     {% elif forloop.counter == 3 %}  {{punti_piloti1.2}}
@@ -39,7 +39,7 @@
                 {% endfor %}
             {% else %}
                 {% for pilota1 in piloti1 %}
-                <p>{{ pilota1.nome }} {% if pilota1.nome == capitano1 %}(C){% endif %}</p>
+                <p>{{ pilota1.nome }} {% if pilota1.nome == capitano1 %}(C{{garacap1}}){% endif %}</p>
                 {% endfor %}
             {% endif %}
             <br>
@@ -85,7 +85,7 @@
             <hr>
             {% if punti_piloti2 %}
                 {% for pilota2 in piloti2 %}
-                <p>{{ pilota2.nome }} {% if pilota2.nome == capitano2 %}(C){% endif %} |<b>
+                <p>{{ pilota2.nome }} {% if pilota2.nome == capitano2 %}(C{{garacap2}}){% endif %} |<b>
                     {% if forloop.counter == 1 %}  {{punti_piloti2.0}}
                     {% elif forloop.counter == 2 %}  {{punti_piloti2.1}}
                     {% elif forloop.counter == 3 %}  {{punti_piloti2.2}}
@@ -99,7 +99,7 @@
                 {% endfor %}
             {% else %}
                 {% for pilota2 in piloti2 %}
-                <p>{{ pilota2.nome }} {% if pilota2.nome == capitano2 %}(C){% endif %}</p>
+                <p>{{ pilota2.nome }} {% if pilota2.nome == capitano2 %}(C{{garacap2}}){% endif %}</p>
                 {% endfor %}
             {% endif %}
             <br>

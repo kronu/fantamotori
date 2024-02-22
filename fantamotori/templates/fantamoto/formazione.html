@@ -6,14 +6,20 @@
 <div class="imppagina">
     <h1 class="form-gara">#{{ nextgara.id }} - {{ nextgara.posto }}</h1>
     <p class="form-entro">Entro {{ nextgara.data }}</p>
-    {% if nextgara.motoe and nextgara.sbk %}
+    {% if numcategorie == 5 %}
     <p class="form-spiega" style="color: red;">8 piloti, 5 team e TM (ogni categoria, con MotoE e SBK)</p>
-    {% elif nextgara.motoe and not nextgara.sbk %}
-    <p class="form-spiega" style="color: red;">7 piloti, 4 team e TM (ogni categoria, con MotoE ma non SBK)</p>
-    {% elif not nextgara.motoe and nextgara.sbk %}
-    <p class="form-spiega" style="color: red;">7 piloti, 4 team e TM (ogni categoria, con SBK ma non MotoE)</p>
-    {% else %}
-    <p class="form-spiega">6 piloti, 3 team e TM (ogni categoria, no MotoE e no SBK)</p>
+    {% elif numcategorie == 4 %}
+    <p class="form-spiega" style="color: red;">
+        7 piloti, 4 team e TM (ogni categoria)
+    </p>
+    {% elif numcategorie == 3 %}
+    <p class="form-spiega">
+        6 piloti, 3 team e TM (ogni categoria, no MotoE no SBK)
+    </p>
+    {% elif numcategorie == 2 %}
+    <p class="form-spiega" style="color: red;">UNA COMBINAZIONE DEL GENERE NON DOVREBBE ESISTERE, CONTATTAMI</p>
+    {% elif numcategorie == 1 %}
+    <p class="form-spiega" style="color: red;">2 piloti, 1 team (solo SBK)</p>
     {% endif %}
     <br>
     <form method="POST" action="schieramento">
@@ -30,9 +36,7 @@
             </div>
         </div>
         {% for pilota in piloti %}
-            {% if not nextgara.motoe and pilota.categoria == "MotoE" %}
-            <div class="form-opzione" style="display: none;"></div>
-            {% elif not nextgara.sbk and pilota.categoria == "SBK" %}
+            {% if pilota.categoria not in listacat %}
             <div class="form-opzione" style="display: none;"></div>
             {% else %}
             <div class="form-opzione form-moto">
@@ -64,13 +68,22 @@
             {% endif %}
         {% endfor %}
         <p class="form-cap">Capitano:</p>
-        <p class="form-capavv">N.B. Il capitano vale solo per la prima gara lunga (NO SPRINT)!</p>
-        <select name="capitan" style="margin-bottom: 5vh; width: 100%; font-size: x-large; text-align: center; border-radius: 10px; ">
+        <select name="capitan" style="width: 100%; font-size: x-large; text-align: center; border-radius: 10px; ">
             <option selected value="0">Nessun capitano</option>
             {% for pilota in piloti %}
             <option value="{{ pilota.nome }}">{{ pilota.nome }}</option>
             {% endfor %}
         </select>
+        <div style="text-align: center;">
+            <div class="form-check form-check-inline">
+                <input name="gara1" class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value=1>
+                <label class="form-check-label" for="inlineRadio1">Gara 1</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input name="gara2" class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value=1>
+                <label class="form-check-label" for="inlineRadio2">Gara 2</label>
+            </div>
+        </div>
         <br>
         <div class="form-cate">
             <div class="form-opnome">
@@ -84,9 +97,7 @@
             </div>
         </div>
         {% for team in teams %}
-            {% if not nextgara.motoe and team.categoria == "MotoE" %}
-            <div class="form-opzione" style="display: none"></div>
-            {% elif not nextgara.sbk and team.categoria == "SBK" %}
+            {% if team.categoria not in listacat %}
             <div class="form-opzione" style="display: none"></div>
             {% else %}
             <div class="form-opzione form-moto">
@@ -112,6 +123,7 @@
             {% endif %}
         {% endfor %}
         <br>
+        {% if numcategorie != 1 %}
         <div class="form-cate">
             <div class="form-opnome">
                 <h4>Team Manager</h4>
@@ -130,6 +142,7 @@
             </div>
         </div>
         <br>
+        {% endif %}
         <button class="btn btn-primary btn-lg form-btn" type="submit">Salva formazione</button>
     </form>
 </div>

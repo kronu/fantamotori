@@ -1,9 +1,24 @@
-Nei "calcolo_gara" aggiungere i team con i corrispettivi piloti,
-    per sommare i loro utente["punti_team"] insieme e assegnare la sommare
-    come punti totali del team.
-Nei "calcolo_gara" aggiungere i team manager con i corrispettivi piloti,
-    per controllare se i loro utente["sprint-dnf"] sono 0, nel tal caso
-    sommare i loro utente["punti_team"] insieme, oppure far restare a 0
-    controllare poi se i loro utente["feature-dnf"] sono 0, se lo sono
-    sommare i loro utente["punti_team"] insieme o farli restare a 0
-    alla fine sommare i due risultati assieme ed assegnarli al Team manager.
+DA FARE:
+[HOME] Manda mail/scarica app per notifiche/whatsapp API per ricordare la formazione
+
+-------------------------------------------
+TERMINATO:
+. [DATABASE] Mettere i piloti dei team (e team manager) nel database invece che hard-coded in views.py
+. [DATABASE] Crea giornata con solo SBK/Indycar invece che necessariamente essere associata con MotoGP/F1
+. [ALBO PAGE] Aggiungi vecchie competizioni nell'albo d'oro
+. [USER PAGE] Crea pagina user dove puoi cambiare immagine e password
+. [HOME PAGE] Visulizza messaggio (es: "Formazione schierata/Giornata calcolata") quando reindirizzato alla home
+. [CALCOLO PAGE] Semplificato qualifiche
+. [HOME] Se giornata precedente esiste e nessuna formazione trovata, schiera formazione vuota invece che aspettare il calcolo
+. [ADMIN] Crea funzione per sostituire un pilota in un team con un altro già esistente o crea un nuovo pilota
+. [ADMIN] Crea funzione per annullare completamente una gara/cambiare categorie che correranno/cambiare orario
+. [FORMULA] Aggiungi F3 e IndyCar
+. [FORMULA] Aggiungi miglior pilota (F1)
+. [FORMULA] Aggiungi pitstop più veloce (F1)
+. [FORMULA] Penalità del pilota (5s = -2p) (F1)
+. [FORMULA] Aggiungi se squalifica, formazione annullata e giornata persa
+. [FORMULA] Aggiungi Capitano
+. [CALCOLO] Aggiungi sezione penalità per ogni pilota nella pagina calcolo (da detrarre al team)
+. [FORMAZIONE] Capitano da selezionare quale gara lunga (SBK/MotoE)
+. [FORMAZIONE] Possibilità giornate con solo SBK o IndyCar
+. [CALCOLO] SISTEMA TUTTE LE MODIFICHE (Nuove penalità, bonus, capitano, Team manager e refactor del calcolo)

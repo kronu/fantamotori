@@ -10,6 +10,7 @@
       <tr class="rosa-testa">
         <th scope="col">Pilota</th>
         <th scope="col">Categoria</th>
+        <th scope="col">Team</th>
         <th scope="col">Punti</th>
       </tr>
     </thead>
@@ -18,6 +19,7 @@
       <tr>
         <td>{{ pilota.nome }}</td>
         <td>{{ pilota.categoria }}</td>
+        <td>{{ pilota.team.nome }}</td>
         <td>{{ pilota.totale }}</td>
       </tr>
       {% endfor %}

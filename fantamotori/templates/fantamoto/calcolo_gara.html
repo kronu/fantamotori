@@ -4,238 +4,339 @@
 
 {% block body %}
 <div class="imppagina">
-    <h1 class="gior-titolo">{{id}} - {{posto}}</h1>
-    <button id="btn-calcavviso" class="btn btn-primary">Clicca qui per avere più info su come calcolare le giornate</button>
-    <div id="calcavviso" style="display: none;">
-        <p class="gior-sotto">Indicare nelle caselle la posizione di arrivo in gara. Se lasciate vuote, saranno assegnati 0 punti (considerati come arrivati dopo al 15°).</p>
-        <p class="gior-sotto">Ricordati di segnare tutte le cadute!</p>
-        <p class="gior-avviso">Se un pilota è infortunato/assente, assegnagli i punti fatti dal sostituto o lascia vuoto se non è stato sostituito.</p>
-        <p style="text-align: center;">Il calcolo potrebbe richiedere qualche secondo.</p>
+    <div style="text-align: center; margin-bottom: 10px;">
+        <h1>{{id}} - {{posto}}</h1>
+        <small style="color: red;">Se qualcuno che è caduto arriva tra i primi 15, non inserire la posizione!</small>
     </div>
     <form method="POST" action="calcolo-{{id}}" onsubmit="return confirm('Confermare tutti i risultati?');">
         {% csrf_token %}
-        <!--Moto3-->
-        <h2 class="gior-cat">Moto3</h2>
-        {% for pilota3 in piloti3 %}
-        <div class="gior-pilota">
-            <div class="gior-left">
-                <p>{{ pilota3.nome }}</p>
-            </div>
-            <div class="gior-right">
-                <div>
-                    <p class="gior-item" style="margin-right: 3%;">Qualifica</p>
-                    <div class="btn-group gior-item" role="group" aria-label="radio toggle button group">
-                        <input id="1-{{pilota3.nome}}" name="quali-3-{{pilota3.nome}}" value="1" type="radio" class="btn-check btn-sm" autocomplete="off">
-                        <label for="1-{{pilota3.nome}}" class="btn btn-outline-primary btn-sm">1</label>
-                        <input id="2-{{pilota3.nome}}" name="quali-3-{{pilota3.nome}}" value="2" type="radio" class="btn-check btn-sm" autocomplete="off">
-                        <label for="2-{{pilota3.nome}}" class="btn btn-outline-primary btn-sm">2</label>
-                        <input id="3-{{pilota3.nome}}" name="quali-3-{{pilota3.nome}}" value="3" type="radio" class="btn-check btn-sm" autocomplete="off">
-                        <label for="3-{{pilota3.nome}}" class="btn btn-outline-primary btn-sm">3</label>
+        {% for categoria in listacat %}
+            <!--Moto3-->
+            {% if categoria == "3" %}
+                <h2 class="gior-cat">Moto3</h2>
+                <!--Qualifiche-->
+                {% for quali in numeroquali %}
+                <div style="margin: -20px 0 -10px 0; text-align: center; border-left: 1px solid gray; border-right: 1px solid gray;">
+                    <small style="display: inline-block">{{quali}}° Qualificato:</small>
+                    <div class="dropdown m-4" style="display: inline-block">
+                        <input type="hidden" name="{{categoria}}-q{{quali}}" id="quali-{{categoria}}-{{quali}}">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton{{categoria}}-{{quali}}" data-bs-toggle="dropdown" aria-expanded="false">
+                            Seleziona pilota
+                        </button>
+                        <ul id="dropdown-menu{{categoria}}-{{quali}}" class="dropdown-menu pt-0" aria-labelledby="dropdownMenuButton{{categoria}}-{{quali}}">
+                            <input id="{{categoria}}-{{quali}}" type="text" class="form-control border-0 border-bottom shadow-none mb-2" placeholder="Search..." oninput="cercaPilota(this)">
+                        </ul>
                     </div>
                 </div>
-                <div>
-                    <label for="feat-gara-3-{{pilota3.nome}}" class="gior-item" style="margin-bottom: 2%;">Feature:</label>
-                    <input id="feat-gara-3-{{pilota3.nome}}" name="feat-gara-3-{{pilota3.nome}}" type="number" class="gior-item">
-                    <div class="form-check form-check-inline">
-                        <label for="feat-dnf-3-{{pilota3.nome}}" class="form-check-label">DNF</label>
-                        <input id="feat-dnf-3-{{pilota3.nome}}" name="feat-dnf-3-{{pilota3.nome}}" value=1 type="checkbox" class="form-check-input">
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <label for="feat-fl-3-{{pilota3.nome}}" class="form-check-label">FL</label>
-                        <input id="feat-fl-3-{{pilota3.nome}}" name="feat-fl-3-{{pilota3.nome}}" value=1 type="checkbox" class="form-check-input">
+                {% endfor %}
+                {% for pilota in piloti %}
+                    {% if pilota.categoria == "Moto3" %}
+                        <!--Risultati Gara-->
+                        <div style="border: 1px solid gray; padding: 5px 5px 5px 5px;">
+                            <h5 style="text-align: center;">{{ pilota.nome }}</h5>
+                            <div style="text-align: center; margin-bottom: 5px;">
+                                <label style="display: inline;">Feature</label>
+                                <input name="{{categoria}}-feat-{{pilota.nome}}" type="number" style="display: inline; margin: 0 5px 0 5px; border-radius: 5px;">
+                                <div class="form-check form-check-inline">
+                                    <label for="{{categoria}}-fl-{{pilota.nome}}" class="form-check-label">FL</label>
+                                    <input name="{{categoria}}-fl-{{pilota.nome}}" class="form-check-input" type="checkbox">
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2 col-6 mx-auto" style="margin-bottom: 5px;">
+                                <button id="{{categoria}}-{{pilota.nome}}" class="btn btn-secondary btn-sm" type="button" onclick="viewPen(this)">Visualizza penalità</button>
+                            </div>
+                            <div style="display: none;" id="pen-{{categoria}}-{{pilota.nome}}">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Long Lap Penalty</span>
+                                    <input disabled name="{{categoria}}-ll-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Drop Position</span>
+                                    <input disabled name="{{categoria}}-dp-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Jump Start</span>
+                                    <input disabled name="{{categoria}}-js-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Drive Through</span>
+                                    <input disabled name="{{categoria}}-dt-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">⚠ Squalifica</span>
+                                    <input disabled name="{{categoria}}-squ-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <br>
+            <!--Moto2-->
+            {% elif categoria == "2" %}
+                <h2 class="gior-cat">Moto2</h2>
+                <!--Qualifiche-->
+                {% for quali in numeroquali %}
+                <div style="margin: -20px 0 -10px 0; text-align: center; border-left: 1px solid gray; border-right: 1px solid gray;">
+                    <small style="display: inline-block">{{quali}}° Qualificato:</small>
+                    <div class="dropdown m-4" style="display: inline-block">
+                        <input type="hidden" name="{{categoria}}-q{{quali}}" id="quali-{{categoria}}-{{quali}}">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton{{categoria}}-{{quali}}" data-bs-toggle="dropdown" aria-expanded="false">
+                            Seleziona pilota
+                        </button>
+                        <ul id="dropdown-menu{{categoria}}-{{quali}}" class="dropdown-menu pt-0" aria-labelledby="dropdownMenuButton{{categoria}}-{{quali}}">
+                            <input id="{{categoria}}-{{quali}}" type="text" class="form-control border-0 border-bottom shadow-none mb-2" placeholder="Search..." oninput="cercaPilota(this)">
+                        </ul>
                     </div>
                 </div>
-            </div>
-        </div>
+                {% endfor %}
+                {% for pilota in piloti %}
+                    {% if pilota.categoria == "Moto2" %}
+                        <!--Risultati Gara-->
+                        <div style="border: 1px solid gray; padding: 5px 5px 5px 5px;">
+                            <h5 style="text-align: center;">{{ pilota.nome }}</h5>
+                            <div style="text-align: center; margin-bottom: 5px;">
+                                <label style="display: inline;">Feature</label>
+                                <input name="{{categoria}}-feat-{{pilota.nome}}" type="number" style="display: inline; margin: 0 5px 0 5px; border-radius: 5px;">
+                                <div class="form-check form-check-inline">
+                                    <label for="{{categoria}}-fl-{{pilota.nome}}" class="form-check-label">FL</label>
+                                    <input name="{{categoria}}-fl-{{pilota.nome}}" class="form-check-input" type="checkbox">
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2 col-6 mx-auto" style="margin-bottom: 5px;">
+                                <button id="{{categoria}}-{{pilota.nome}}" class="btn btn-secondary btn-sm" type="button" onclick="viewPen(this)">Visualizza penalità</button>
+                            </div>
+                            <div style="display: none;" id="pen-{{categoria}}-{{pilota.nome}}">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Long Lap Penalty</span>
+                                    <input disabled name="{{categoria}}-ll-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Drop Position</span>
+                                    <input disabled name="{{categoria}}-dp-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Jump Start</span>
+                                    <input disabled name="{{categoria}}-js-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Drive Through</span>
+                                    <input disabled name="{{categoria}}-dt-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">⚠ Squalifica</span>
+                                    <input disabled name="{{categoria}}-squ-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <br>
+            {% elif categoria == "gp" %}
+                <h2 class="gior-cat">MotoGP</h2>
+                <!--Qualifiche-->
+                {% for quali in numeroquali %}
+                <div style="margin: -20px 0 -10px 0; text-align: center; border-left: 1px solid gray; border-right: 1px solid gray;">
+                    <small style="display: inline-block">{{quali}}° Qualificato:</small>
+                    <div class="dropdown m-4" style="display: inline-block">
+                        <input type="hidden" name="{{categoria}}-q{{quali}}" id="quali-{{categoria}}-{{quali}}">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton{{categoria}}-{{quali}}" data-bs-toggle="dropdown" aria-expanded="false">
+                            Seleziona pilota
+                        </button>
+                        <ul id="dropdown-menu{{categoria}}-{{quali}}" class="dropdown-menu pt-0" aria-labelledby="dropdownMenuButton{{categoria}}-{{quali}}">
+                            <input id="{{categoria}}-{{quali}}" type="text" class="form-control border-0 border-bottom shadow-none mb-2" placeholder="Search..." oninput="cercaPilota(this)">
+                        </ul>
+                    </div>
+                </div>
+                {% endfor %}
+                {% for pilota in piloti %}
+                    {% if pilota.categoria == "MotoGP" %}
+                        <!--Risultati Gara-->
+                        <div style="border: 1px solid gray; padding: 5px 5px 5px 5px;">
+                            <h5 style="text-align: center;">{{ pilota.nome }}</h5>
+                            <div style="text-align: center; margin-bottom: 5px;">
+                                <label style="display: inline;">Sprint</label>
+                                <input name="{{categoria}}-spr-{{pilota.nome}}" type="number" style="display: inline; margin: 0 5px 0 5px; border-radius: 5px;">
+                                <div class="form-check form-check-inline">
+                                    <label for="{{categoria}}-flspr-{{pilota.nome}}" class="form-check-label">FL</label>
+                                    <input name="{{categoria}}-flspr-{{pilota.nome}}" class="form-check-input" type="checkbox">
+                                </div>
+                            </div>
+                            <div style="text-align: center; margin-bottom: 5px;">
+                                <label style="display: inline;">Feature</label>
+                                <input name="{{categoria}}-feat-{{pilota.nome}}" type="number" style="display: inline; margin: 0 5px 0 5px; border-radius: 5px;">
+                                <div class="form-check form-check-inline">
+                                    <label for="{{categoria}}-flfeat-{{pilota.nome}}" class="form-check-label">FL</label>
+                                    <input name="{{categoria}}-flfeat-{{pilota.nome}}" class="form-check-input" type="checkbox">
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2 col-6 mx-auto" style="margin-bottom: 5px;">
+                                <button id="{{categoria}}-{{pilota.nome}}" class="btn btn-secondary btn-sm" type="button" onclick="viewPen(this)">Visualizza penalità</button>
+                            </div>
+                            <div style="display: none;" id="pen-{{categoria}}-{{pilota.nome}}">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Long Lap Penalty</span>
+                                    <input disabled name="{{categoria}}-ll-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Drop Position</span>
+                                    <input disabled name="{{categoria}}-dp-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Jump Start</span>
+                                    <input disabled name="{{categoria}}-js-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Drive Through</span>
+                                    <input disabled name="{{categoria}}-dt-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">⚠ Squalifica</span>
+                                    <input disabled name="{{categoria}}-squ-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <br>
+            {% elif categoria == "e" %}
+                <h2 class="gior-cat">MotoE</h2>
+                <!--Qualifiche-->
+                {% for quali in numeroquali %}
+                <div style="margin: -20px 0 -10px 0; text-align: center; border-left: 1px solid gray; border-right: 1px solid gray;">
+                    <small style="display: inline-block">{{quali}}° Qualificato:</small>
+                    <div class="dropdown m-4" style="display: inline-block">
+                        <input type="hidden" name="{{categoria}}-q{{quali}}" id="quali-{{categoria}}-{{quali}}">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton{{categoria}}-{{quali}}" data-bs-toggle="dropdown" aria-expanded="false">
+                            Seleziona pilota
+                        </button>
+                        <ul id="dropdown-menu{{categoria}}-{{quali}}" class="dropdown-menu pt-0" aria-labelledby="dropdownMenuButton{{categoria}}-{{quali}}">
+                            <input id="{{categoria}}-{{quali}}" type="text" class="form-control border-0 border-bottom shadow-none mb-2" placeholder="Search..." oninput="cercaPilota(this)">
+                        </ul>
+                    </div>
+                </div>
+                {% endfor %}
+                {% for pilota in piloti %}
+                    {% if pilota.categoria == "MotoE" %}
+                        <!--Risultati Gara-->
+                        <div style="border: 1px solid gray; padding: 5px 5px 5px 5px;">
+                            <h5 style="text-align: center;">{{ pilota.nome }}</h5>
+                            <div style="text-align: center; margin-bottom: 5px;">
+                                <label style="display: inline;">Gara 1</label>
+                                <input name="{{categoria}}-g1-{{pilota.nome}}" type="number" style="display: inline; margin: 0 5px 0 5px; border-radius: 5px;">
+                                <div class="form-check form-check-inline">
+                                    <label for="{{categoria}}-flg1-{{pilota.nome}}" class="form-check-label">FL</label>
+                                    <input name="{{categoria}}-flg1-{{pilota.nome}}" class="form-check-input" type="checkbox">
+                                </div>
+                            </div>
+                            <div style="text-align: center; margin-bottom: 5px;">
+                                <label style="display: inline;">Gara 2</label>
+                                <input name="{{categoria}}-g2-{{pilota.nome}}" type="number" style="display: inline; margin: 0 5px 0 5px; border-radius: 5px;">
+                                <div class="form-check form-check-inline">
+                                    <label for="{{categoria}}-flg2-{{pilota.nome}}" class="form-check-label">FL</label>
+                                    <input name="{{categoria}}-flg2-{{pilota.nome}}" class="form-check-input" type="checkbox">
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2 col-6 mx-auto" style="margin-bottom: 5px;">
+                                <button id="{{categoria}}-{{pilota.nome}}" class="btn btn-secondary btn-sm" type="button" onclick="viewPen(this)">Visualizza penalità</button>
+                            </div>
+                            <div style="display: none;" id="pen-{{categoria}}-{{pilota.nome}}">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Long Lap Penalty</span>
+                                    <input disabled name="{{categoria}}-ll-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Drop Position</span>
+                                    <input disabled name="{{categoria}}-dp-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Jump Start</span>
+                                    <input disabled name="{{categoria}}-js-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Drive Through</span>
+                                    <input disabled name="{{categoria}}-dt-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">⚠ Squalifica</span>
+                                    <input disabled name="{{categoria}}-squ-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <br>
+            {% elif categoria == "sbk" %}
+                <h2 class="gior-cat">SBK</h2>
+                <!--Qualifiche-->
+                {% for quali in numeroquali %}
+                <div style="margin: -20px 0 -10px 0; text-align: center; border-left: 1px solid gray; border-right: 1px solid gray;">
+                    <small style="display: inline-block">{{quali}}° Qualificato:</small>
+                    <div class="dropdown m-4" style="display: inline-block">
+                        <input type="hidden" name="{{categoria}}-q{{quali}}" id="quali-{{categoria}}-{{quali}}">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton{{categoria}}-{{quali}}" data-bs-toggle="dropdown" aria-expanded="false">
+                            Seleziona pilota
+                        </button>
+                        <ul id="dropdown-menu{{categoria}}-{{quali}}" class="dropdown-menu pt-0" aria-labelledby="dropdownMenuButton{{categoria}}-{{quali}}">
+                            <input id="{{categoria}}-{{quali}}" type="text" class="form-control border-0 border-bottom shadow-none mb-2" placeholder="Search..." oninput="cercaPilota(this)">
+                        </ul>
+                    </div>
+                </div>
+                {% endfor %}
+                {% for pilota in piloti %}
+                    {% if pilota.categoria == "SBK" %}
+                        <!--Risultati Gara-->
+                        <div style="border: 1px solid gray; padding: 5px 5px 5px 5px;">
+                            <h5 style="text-align: center;">{{ pilota.nome }}</h5>
+                            <div style="text-align: center; margin-bottom: 5px;">
+                                <label style="display: inline;">Gara 1</label>
+                                <input name="{{categoria}}-g1-{{pilota.nome}}" type="number" style="display: inline; margin: 0 5px 0 5px; border-radius: 5px;">
+                                <div class="form-check form-check-inline">
+                                    <label for="{{categoria}}-flg1-{{pilota.nome}}" class="form-check-label">FL</label>
+                                    <input name="{{categoria}}-flg1-{{pilota.nome}}" class="form-check-input" type="checkbox">
+                                </div>
+                            </div>
+                            <div style="text-align: center; margin-bottom: 5px;">
+                                <label style="display: inline;">SuperPole</label>
+                                <input name="{{categoria}}-super-{{pilota.nome}}" type="number" style="display: inline; margin: 0 5px 0 5px; border-radius: 5px;">
+                            </div>
+                            <div style="text-align: center; margin-bottom: 5px;">
+                                <label style="display: inline;">Gara 2</label>
+                                <input name="{{categoria}}-g2-{{pilota.nome}}" type="number" style="display: inline; margin: 0 5px 0 5px; border-radius: 5px;">
+                                <div class="form-check form-check-inline">
+                                    <label for="{{categoria}}-flg2-{{pilota.nome}}" class="form-check-label">FL</label>
+                                    <input name="{{categoria}}-flg2-{{pilota.nome}}" class="form-check-input" type="checkbox">
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2 col-6 mx-auto" style="margin-bottom: 5px;">
+                                <button id="{{categoria}}-{{pilota.nome}}" class="btn btn-secondary btn-sm" type="button" onclick="viewPen(this)">Visualizza penalità</button>
+                            </div>
+                            <div style="display: none;" id="pen-{{categoria}}-{{pilota.nome}}">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Long Lap Penalty</span>
+                                    <input disabled name="{{categoria}}-ll-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Drop Position</span>
+                                    <input disabled name="{{categoria}}-dp-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Jump Start</span>
+                                    <input disabled name="{{categoria}}-js-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Drive Through</span>
+                                    <input disabled name="{{categoria}}-dt-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">⚠ Squalifica</span>
+                                    <input disabled name="{{categoria}}-squ-{{pilota.nome}}" type="number" placeholder="Moltiplicatore" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         {% endfor %}
-        <!--Moto2-->
-        <h2 class="gior-cat">Moto2</h2>
-        {% for pilota2 in piloti2 %}
-        <div class="gior-pilota">
-            <div class="gior-left">
-                <p>{{ pilota2.nome }}</p>
-            </div>
-            <div class="gior-right">
-                <div>
-                    <p class="gior-item" style="margin-right: 3%;">Qualifica</p>
-                    <div class="btn-group gior-item" role="group" aria-label="radio toggle button group">
-                        <input id="1-{{pilota2.nome}}" name="quali-2-{{pilota2.nome}}" value="1" type="radio" class="btn-check btn-sm" autocomplete="off">
-                        <label for="1-{{pilota2.nome}}" class="btn btn-outline-primary btn-sm">1</label>
-                        <input id="2-{{pilota2.nome}}" name="quali-2-{{pilota2.nome}}" value="2" type="radio" class="btn-check btn-sm" autocomplete="off">
-                        <label for="2-{{pilota2.nome}}" class="btn btn-outline-primary btn-sm">2</label>
-                        <input id="3-{{pilota2.nome}}" name="quali-2-{{pilota2.nome}}" value="3" type="radio" class="btn-check btn-sm" autocomplete="off">
-                        <label for="3-{{pilota2.nome}}" class="btn btn-outline-primary btn-sm">3</label>
-                    </div>
-                </div>
-                <div>
-                    <label for="feat-gara-2-{{pilota2.nome}}" class="gior-item" style="margin-bottom: 2%;">Feature:</label>
-                    <input id="feat-gara-2-{{pilota2.nome}}" name="feat-gara-2-{{pilota2.nome}}" type="number" class="gior-item">
-                    <div class="form-check form-check-inline">
-                        <label for="feat-dnf-2-{{pilota2.nome}}" class="form-check-label">DNF</label>
-                        <input id="feat-dnf-2-{{pilota2.nome}}" name="feat-dnf-2-{{pilota2.nome}}" value=1 type="checkbox" class="form-check-input">
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <label for="feat-fl-2-{{pilota2.nome}}" class="form-check-label">FL</label>
-                        <input id="feat-fl-2-{{pilota2.nome}}" name="feat-fl-2-{{pilota2.nome}}" value=1 type="checkbox" class="form-check-input">
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-        <!--MotoGP-->
-        <h2 class="gior-cat">MotoGP</h2>
-        {% for pilotagp in pilotigp %}
-        <div class="gior-pilota">
-            <div class="gior-left">
-                <p>{{ pilotagp.nome }}</p>
-            </div>
-            <div class="gior-right">
-                <div>
-                    <p class="gior-item" style="margin-right: 3%;">Qualifica</p>
-                    <div class="btn-group gior-item" role="group" aria-label="radio toggle button group">
-                        <input id="1-{{pilotagp.nome}}" name="quali-gp-{{pilotagp.nome}}" value="1" type="radio" class="btn-check btn-sm" autocomplete="off">
-                        <label for="1-{{pilotagp.nome}}" class="btn btn-outline-primary btn-sm">1</label>
-                        <input id="2-{{pilotagp.nome}}" name="quali-gp-{{pilotagp.nome}}" value="2" type="radio" class="btn-check btn-sm" autocomplete="off">
-                        <label for="2-{{pilotagp.nome}}" class="btn btn-outline-primary btn-sm">2</label>
-                        <input id="3-{{pilotagp.nome}}" name="quali-gp-{{pilotagp.nome}}" value="3" type="radio" class="btn-check btn-sm" autocomplete="off">
-                        <label for="3-{{pilotagp.nome}}" class="btn btn-outline-primary btn-sm">3</label>
-                    </div>
-                </div>
-                <div>
-                    <label for="spr-gara-gp-{{pilotagp.nome}}" class="gior-item" style="margin-bottom: 2%;">Sprint:</label>
-                    <input id="spr-gara-gp-{{pilotagp.nome}}" name="spr-gara-gp-{{pilotagp.nome}}" type="number" class="gior-item">
-                    <div class="form-check form-check-inline">
-                        <label for="spr-dnf-gp-{{pilotagp.nome}}" class="form-check-label">DNF</label>
-                        <input id="spr-dnf-gp-{{pilotagp.nome}}" name="spr-dnf-gp-{{pilotagp.nome}}" value=1 type="checkbox" class="form-check-input">
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <label for="spr-fl-gp-{{pilotagp.nome}}" class="form-check-label">FL</label>
-                        <input id="spr-fl-gp-{{pilotagp.nome}}" name="spr-fl-gp-{{pilotagp.nome}}" value=1 type="checkbox" class="form-check-input">
-                    </div>
-                </div>
-                <div>
-                    <label for="feat-gara-gp-{{pilotagp.nome}}" class="gior-item" style="margin-bottom: 2%;">Feature:</label>
-                    <input id="feat-gara-gp-{{pilotagp.nome}}" name="feat-gara-gp-{{pilotagp.nome}}" type="number" class="gior-item">
-                    <div class="form-check form-check-inline">
-                        <label for="feat-dnf-gp-{{pilotagp.nome}}" class="form-check-label">DNF</label>
-                        <input id="feat-dnf-gp-{{pilotagp.nome}}" name="feat-dnf-gp-{{pilotagp.nome}}" value=1 type="checkbox" class="form-check-input">
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <label for="feat-fl-gp-{{pilotagp.nome}}" class="form-check-label">FL</label>
-                        <input id="feat-fl-gp-{{pilotagp.nome}}" name="feat-fl-gp-{{pilotagp.nome}}" value=1 type="checkbox" class="form-check-input">
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-        <!--MotoE-->
-        {% if motoe %}
-        <h2 class="gior-cat">MotoE</h2>
-        {% for pilotae in pilotie %}
-        <div class="gior-pilota">
-            <div class="gior-left">
-                <p>{{ pilotae.nome }}</p>
-            </div>
-            <div class="gior-right">
-                <div>
-                    <p class="gior-item" style="margin-right: 3%;">Qualifica</p>
-                    <div class="btn-group gior-item" role="group" aria-label="radio toggle button group">
-                        <input id="1-{{pilotae.nome}}" name="quali-e-{{pilotae.nome}}" value="1" type="radio" class="btn-check btn-sm" autocomplete="off">
-                        <label for="1-{{pilotae.nome}}" class="btn btn-outline-primary btn-sm">1</label>
-                        <input id="2-{{pilotae.nome}}" name="quali-e-{{pilotae.nome}}" value="2" type="radio" class="btn-check btn-sm" autocomplete="off">
-                        <label for="2-{{pilotae.nome}}" class="btn btn-outline-primary btn-sm">2</label>
-                        <input id="3-{{pilotae.nome}}" name="quali-e-{{pilotae.nome}}" value="3" type="radio" class="btn-check btn-sm" autocomplete="off">
-                        <label for="3-{{pilotae.nome}}" class="btn btn-outline-primary btn-sm">3</label>
-                    </div>
-                </div>
-                <div>
-                    <label for="g1-gara-e-{{pilotae.nome}}" class="gior-item" style="margin-bottom: 2%;">Gara 1:</label>
-                    <input id="g1-gara-e-{{pilotae.nome}}" name="g1-gara-e-{{pilotae.nome}}" type="number" class="gior-item">
-                    <div class="form-check form-check-inline">
-                        <label for="g1-dnf-e-{{pilotae.nome}}" class="form-check-label">DNF</label>
-                        <input id="g1-dnf-e-{{pilotae.nome}}" name="g1-dnf-e-{{pilotae.nome}}" value=1 type="checkbox" class="form-check-input">
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <label for="g1-fl-e-{{pilotae.nome}}" class="form-check-label">FL</label>
-                        <input id="g1-fl-e-{{pilotae.nome}}" name="g1-fl-e-{{pilotae.nome}}" value=1 type="checkbox" class="form-check-input">
-                    </div>
-                </div>
-                <div>
-                    <label for="g2-gara-e-{{pilotae.nome}}" class="gior-item" style="margin-bottom: 2%;">Gara 2:</label>
-                    <input id="g2-gara-e-{{pilotae.nome}}" name="g2-gara-e-{{pilotae.nome}}" type="number" class="gior-item">
-                    <div class="form-check form-check-inline">
-                        <label for="g2-dnf-e-{{pilotae.nome}}" class="form-check-label">DNF</label>
-                        <input id="g2-dnf-e-{{pilotae.nome}}" name="g2-dnf-e-{{pilotae.nome}}" value=1 type="checkbox" class="form-check-input">
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <label for="g2-fl-e-{{pilotae.nome}}" class="form-check-label">FL</label>
-                        <input id="g2-fl-e-{{pilotae.nome}}" name="g2-fl-e-{{pilotae.nome}}" value=1 type="checkbox" class="form-check-input">
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-        {% endif %}
-        <!--SuperBike-->
-        {% if sbk %}
-        <h2 class="gior-cat">SuperBike</h2>
-        {% for pilotasbk in pilotisbk %}
-        <div class="gior-pilota">
-            <div class="gior-left">
-                <p>{{ pilotasbk.nome }}</p>
-            </div>
-            <div class="gior-right">
-                <div>
-                    <p class="gior-item" style="margin-right: 3%;">Qualifica</p>
-                    <div class="btn-group gior-item" role="group" aria-label="radio toggle button group">
-                        <input id="1-{{pilotasbk.nome}}" name="quali-sbk-{{pilotasbk.nome}}" value="1" type="radio" class="btn-check btn-sm" autocomplete="off">
-                        <label for="1-{{pilotasbk.nome}}" class="btn btn-outline-primary btn-sm">1</label>
-                        <input id="2-{{pilotasbk.nome}}" name="quali-sbk-{{pilotasbk.nome}}" value="2" type="radio" class="btn-check btn-sm" autocomplete="off">
-                        <label for="2-{{pilotasbk.nome}}" class="btn btn-outline-primary btn-sm">2</label>
-                        <input id="3-{{pilotasbk.nome}}" name="quali-sbk-{{pilotasbk.nome}}" value="3" type="radio" class="btn-check btn-sm" autocomplete="off">
-                        <label for="3-{{pilotasbk.nome}}" class="btn btn-outline-primary btn-sm">3</label>
-                    </div>
-                </div>
-                <div>
-                    <label for="g1-gara-sbk-{{pilotasbk.nome}}" class="gior-item" style="margin-bottom: 2%;">Gara 1:</label>
-                    <input id="g1-gara-sbk-{{pilotasbk.nome}}" name="g1-gara-sbk-{{pilotasbk.nome}}" type="number" class="gior-item">
-                    <div class="form-check form-check-inline">
-                        <label for="g1-dnf-sbk-{{pilotasbk.nome}}" class="form-check-label">DNF</label>
-                        <input id="g1-dnf-sbk-{{pilotasbk.nome}}" name="g1-dnf-sbk-{{pilotasbk.nome}}" value=1 type="checkbox" class="form-check-input">
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <label for="g1-fl-sbk-{{pilotasbk.nome}}" class="form-check-label">FL</label>
-                        <input id="g1-fl-sbk-{{pilotasbk.nome}}" name="g1-fl-sbk-{{pilotasbk.nome}}" value=1 type="checkbox" class="form-check-input">
-                    </div>
-                </div>
-                <div>
-                    <label for="sup-gara-sbk-{{pilotasbk.nome}}" class="gior-item" style="margin-bottom: 2%;">Super Pole:</label>
-                    <input id="sup-gara-sbk-{{pilotasbk.nome}}" name="sup-gara-sbk-{{pilotasbk.nome}}" type="number" class="gior-item">
-                    <div class="form-check form-check-inline">
-                        <label for="sup-dnf-sbk-{{pilotasbk.nome}}" class="form-check-label">DNF</label>
-                        <input id="sup-dnf-sbk-{{pilotasbk.nome}}" name="sup-dnf-sbk-{{pilotasbk.nome}}" value=1 type="checkbox" class="form-check-input">
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <label for="sup-fl-sbk-{{pilotasbk.nome}}" class="form-check-label">FL</label>
-                        <input id="sup-fl-sbk-{{pilotasbk.nome}}" name="sup-fl-sbk-{{pilotasbk.nome}}" value=1 type="checkbox" class="form-check-input">
-                    </div>
-                </div>
-                <div>
-                    <label for="g2-gara-sbk-{{pilotasbk.nome}}" class="gior-item" style="margin-bottom: 2%;">Gara 2:</label>
-                    <input id="g2-gara-sbk-{{pilotasbk.nome}}" name="g2-gara-sbk-{{pilotasbk.nome}}" type="number" class="gior-item">
-                    <div class="form-check form-check-inline">
-                        <label for="g2-dnf-sbk-{{pilotasbk.nome}}" class="form-check-label">DNF</label>
-                        <input id="g2-dnf-sbk-{{pilotasbk.nome}}" name="g2-dnf-sbk-{{pilotasbk.nome}}" value=1 type="checkbox" class="form-check-input">
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <label for="g2-fl-sbk-{{pilotasbk.nome}}" class="form-check-label">FL</label>
-                        <input id="g2-fl-sbk-{{pilotasbk.nome}}" name="g2-fl-sbk-{{pilotasbk.nome}}" value=1 type="checkbox" class="form-check-input">
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-        {% endif %}
         <button class="btn btn-primary btn-lg gior-btn" type="submit">Conferma</button>
     </form>
 </div>

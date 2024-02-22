@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}Cambio piloti - Fanta Moto{% endblock %}
+
+{% block body %}
+<div class="imppagina">
+    <h1 style="margin-top: 10%;">Seleziona pilota da rimpiazzare</h1>
+    <form method="POST" action="adm-piloti" onsubmit="return confirm('Confermare le modifiche?');">
+        {% csrf_token %}
+        <div class="dropdown m-4 d-grid gap-2">
+            <input type="hidden" name="oldname" id="oldname" value="">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                Seleziona pilota
+            </button>
+            <ul id="dropdown-menu" class="dropdown-menu pt-0" aria-labelledby="dropdownMenuButton">
+                <input type="text" class="form-control border-0 border-bottom shadow-none mb-2" placeholder="Search..." oninput="cercaPilota(this)">
+            </ul>
+        </div>
+        <br>
+        <h4>Nuovo nome</h4>
+        <input name="newname" type="text" placeholder="Inserire nome pilota" class="form-control">
+        <br>
+        <div class="d-grid gap-2">
+            <button class="btn btn-primary" type="submit">Conferma</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

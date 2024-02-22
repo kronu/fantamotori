@@ -7,8 +7,7 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("logout", views.logout_view, name="logout"),
     path("", views.scelta, name="index"),
-    # Test moto giornata 20 Malesia
-    path("test20", views.moto_test20, name="test20"),
+    path("user", views.utente, name="utente"),
     # Fantamoto
     path("fantamoto", views.moto_home, name="fantamoto"),
     path("fantamoto/rose", views.moto_rose, name="fantamoto/rose"),
@@ -20,6 +19,9 @@ urlpatterns = [
     path("fantamoto/calcolo-<id>", views.moto_calcologara, name="fantamoto/calcolo_giornata"),
     path("fantamoto/formazione", views.moto_formazione, name="fantamoto/formazione"),
     path("fantamoto/schieramento", views.moto_schieramento, name="fantamoto/schieramento"),
+    path("fantamoto/adm-piloti", views.moto_admpiloti, name="fantamoto/adm-piloti"),
+    path("fantamoto/adm-team", views.moto_admteam, name="fantamoto/adm-team"),
+    path("fantamoto/adm-gara", views.moto_admgara, name="fantamoto/adm-gara"),
     # Fantaformula
     path("fantaformula", views.formula_home, name="fantaformula"),
     path("fantaformula/rose", views.formula_rose, name="fantaformula/rose"),
@@ -31,4 +33,7 @@ urlpatterns = [
     path("fantaformula/calcolo-<id>", views.formula_calcologara, name="fantaformula/calcolo_giornata"),
     path("fantaformula/formazione", views.formula_formazione, name="fantaformula/formazione"),
     path("fantaformula/schieramento", views.formula_schieramento, name="fantaformula/schieramento"),
+    path("fantaformula/adm-piloti", views.formula_admpiloti, name="fantaformula/adm-piloti"),
+    path("fantaformula/adm-team", views.formula_admteam, name="fantaformula/adm-team"),
+    path("fantaformula/adm-gara", views.formula_admgara, name="fantaformula/adm-gara"),
 ]

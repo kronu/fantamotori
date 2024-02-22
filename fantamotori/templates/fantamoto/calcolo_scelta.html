@@ -4,17 +4,26 @@
 
 {% block body %}
 <div class="imppagina">
-    <h1 class="calc-titolo">
-        Ti aspetta un compito difficile, riservato a pochi ed affidabili... 
-        il calcolo dei punteggi! Sei pronto?
-    </h1>
-    <p class="calc-titolo">Per favore non sbagliare :(</p>
-    <p class="calc-label">Seleziona giornata da calcolare</p>
+    <h4 style="margin-top: 10%;">Seleziona giornata da calcolare</h4>
     <select id="calc-select" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
         {% for giornata in giornate %}
         <option value="{{ giornata.id }}">{{giornata.id}} - {{giornata.posto}}</option>
         {% endfor %}
     </select>
-    <button id="calc-btn" class="btn btn-primary btn-lg calc-btn">Prosegui</button>
+    <div class="d-grid gap-2" style="margin-bottom: 15%;">
+        <button id="calc-btn" class="btn btn-primary">Prosegui</button>
+    </div>
+    <hr>
+    <div class="d-grid gap-2">
+        <a href="../fantamoto/adm-piloti" class="btn btn-warning">Sostituzione piloti</a>
+    </div>
+    <hr>
+    <div class="d-grid gap-2">
+        <a href="../fantamoto/adm-team" class="btn btn-warning">Modifica componenti team</a>
+    </div>
+    <hr>
+    <div class="d-grid gap-2">
+        <a href="../fantamoto/adm-gara" class="btn btn-warning">Cambia info di gara</a>
+    </div>
 </div>
 {% endblock %}

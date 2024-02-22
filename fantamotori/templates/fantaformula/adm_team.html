@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block title %}Cambio team - Fanta Formula{% endblock %}
+
+{% block body %}
+<div class="imppagina">
+    <form style="text-align: center;" method="POST" action="adm-team" onsubmit="return confirm('Confermare le modifiche?');">
+        {% csrf_token %}
+        <h1>Seleziona team</h1>
+        <select name="team" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+            {% for team in teams %}
+            <option value="{{ team.nome }}">{{team.nome}}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <h1>Seleziona pilota da sostituire</h1>
+        <div class="dropdown m-4 d-grid gap-2">
+            <input type="hidden" name="oldpilota" id="oldpilota" value="">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                Seleziona pilota
+            </button>
+            <ul id="dropdown-menu1" class="dropdown-menu pt-0" aria-labelledby="dropdownMenuButton1">
+                <input id="1" type="text" class="form-control border-0 border-bottom shadow-none mb-2" placeholder="Search..." oninput="cercaPilota(this)">
+            </ul>
+        </div>
+        <h1>Seleziona nuovo pilota</h1>
+        <div class="dropdown m-4 d-grid gap-2">
+            <input type="hidden" name="newpilota" id="newpilota" value="">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                Seleziona pilota
+            </button>
+            <ul id="dropdown-menu2" class="dropdown-menu pt-0" aria-labelledby="dropdownMenuButton2">
+                <input id="2" type="text" class="form-control border-0 border-bottom shadow-none mb-2" placeholder="Search..." oninput="cercaPilota(this)">
+            </ul>
+        </div>
+        <br>
+        <br>
+        <div class="d-grid gap-2">
+            <button class="btn btn-danger" type="submit">Conferma</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

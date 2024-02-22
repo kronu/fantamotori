@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block title %}Cambio gara - Fanta Moto{% endblock %}
+
+{% block body %}
+<div class="imppagina">
+    <form style="text-align: center;" method="POST" action="adm-gara" onsubmit="return confirm('Confermare le modifiche?');">
+        {% csrf_token %}
+        <h1>Seleziona giornata</h1>
+        <select name="gara" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+            {% for gara in gare %}
+            <option value="{{ gara.posto }}">{{gara.id}} - {{gara.posto}}</option>
+            {% endfor %}
+        </select>
+        <div class="d-grid gap-2">
+            <input id="annullata" type="hidden" name="annullata" value="">
+            <button class="btn btn-warning" type="button" onclick="annullaGara()"><b>CANCELLARE LA GARA?</b></button>
+        </div>
+        <br>
+        <h1>Modifica nome della gara</h1>
+        <input type="text" name="nome" placeholder="Inserire nuovo nome" class="form-control">
+        <br>
+        <h1>Modifica categorie in gara</h1>
+        <div class="form-check form-check-inline">
+            <input name="MotoGP" class="form-check-input" type="checkbox" id="inlineCheckbox1" value="MotoGP">
+            <label class="form-check-label" for="inlineCheckbox1">MotoGP</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input name="Moto2" class="form-check-input" type="checkbox" id="inlineCheckbox2" value="Moto2">
+            <label class="form-check-label" for="inlineCheckbox2">Moto2</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input name="Moto3" class="form-check-input" type="checkbox" id="inlineCheckbox3" value="Moto3">
+            <label class="form-check-label" for="inlineCheckbox3">Moto3</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input name="MotoE" class="form-check-input" type="checkbox" id="inlineCheckbox4" value="MotoE">
+            <label class="form-check-label" for="inlineCheckbox4">MotoE</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input name="SBK" class="form-check-input" type="checkbox" id="inlineCheckbox5" value="SBK">
+            <label class="form-check-label" for="inlineCheckbox5">SBK</label>
+        </div>
+        <br>
+        <br>
+        <h1>Cambia orario per la formazione</h1>
+        <input name="orario" type="datetime-local" class="form-control">
+        <br>
+        <div class="d-grid gap-2">
+            <button id="submit" class="btn btn-primary" type="submit">Conferma</button>
+        </div>
+    </form>
+    <br>
+</div>
+{% endblock %}

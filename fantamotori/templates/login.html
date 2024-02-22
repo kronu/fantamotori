@@ -4,19 +4,27 @@
 
 {% block body %}
 <div class="imppagina">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
     {% if message %}
         <p class="login-errore">{{message}}</p>
     {% endif %}
     <form action="{% url 'login' %}" class="login-formspacing" method="POST" autocomplete="off">
         {% csrf_token %}
         <div class="mb-3 input-group-lg">
-            <label for="exampleInputEmail1" class="form-label login-label">Username</label>
+            <label for="exampleInputEmail1" class="form-label login-label bold">Username</label>
             <input name="username" type="text" class="form-control login-input" placeholder="Inserire username qui">
         </div>
         <br>
         <br>
         <div class="mb-3 input-group-lg">
-            <label for="exampleInputPassword1" class="form-label login-label">Password</label>
+            <label for="exampleInputPassword1" class="form-label login-label bold">Password</label>
             <input name="password" type="password" class="form-control" placeholder="Inserire password qui">
         </div>
         <br>

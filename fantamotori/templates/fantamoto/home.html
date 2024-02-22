@@ -4,10 +4,20 @@
 
 {% block body %}
 <div class="imppagina">
-    <div class="home-profilo">
-        <img class="circle-img" src="{{utente.immagine}}">
-        <p class="home-utente">{{utente.username}}</p>
-    </div>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <a href="user" style="text-decoration: none;">
+        <div class="home-profilo">
+            <img class="circle-img" src="{{utente.immagine}}">
+            <p class="home-utente">{{utente.username}}</p>
+        </div>
+    </a>
     {% if not ultimagara and not previousgara %}
     <p class="home-labelrisultato">Prima gara ancora da disputare</p>
     <div class="home-recente">
@@ -16,6 +26,16 @@
         </div>
         <div class="home-risultato">
             -
+        </div>
+    </div>
+    {% elif ultimagara and not previousgara %}
+    <p class="home-labelrisultato">Ultimo risultato al {{ ultimagara.posto }}</p>
+    <div class="home-recente">
+        <div class="home-risultato" style="color:red">
+            No formazione
+        </div>
+        <div class="home-risultato">
+            0 punti
         </div>
     </div>
     {% else %}
@@ -128,7 +148,7 @@
           </div>
           <div class="home-icon">
             <a class="home-iconlink" href="../fantamoto/calcolo">
-                <p class="home-iconlabel">Calcolo</p>
+                <p class="home-iconlabel">Admin</p>
                 <img width="30px" height="30px" src="static/calculator.png">
             </a>
           </div>
@@ -142,15 +162,14 @@
         <p class="home-avviso">NON HAI ANCORA SCHIERATO LA FORMAZIONE!</p>
         {% endif %}
         <p class="home-avviso"><b>{{ nextgara.posto }} - {{ nextgara.data }}</b></p>
-        {% if nextgara.motoe and nextgara.sbk %}
-        <p class="home-avviso">Questa giornata ci sarà la MotoE e SBK!</p>
-        {% elif nextgara.motoe and not nextgara.sbk %}
-        <p class="home-avviso">Questa giornata ci sarà la MotoE!</p>
-        {% elif not nextgara.motoe and nextgara.sbk %}
-        <p class="home-avviso">Questa giornata ci sarà la SBK!</p>
-        {% else %}
-        <p>Questa giornata non ci sarà né la MotoE né la SBK.</p>
-        {% endif %}
+        <p>
+            Questa giornata ci sarà la 
+            {% if "MotoGP" in listacat %}MotoGP {%endif%}
+            {% if "Moto2" in listacat %}Moto2 {%endif%}
+            {% if "Moto3" in listacat %}Moto3 {%endif%}
+            {% if "MotoE" in listacat %}MotoE {%endif%}
+            {% if "SBK" in listacat %}SBK {%endif%}
+        </p>
     </div>
     <a href="fantamoto/formazione" class="btn btn-success btn-lg home-formazionebtn">Inserisci formazione</a>
     {% else %}

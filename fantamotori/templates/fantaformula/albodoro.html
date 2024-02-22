@@ -4,52 +4,295 @@
 
 {% block body %}
 <div class="imppagina">
-    <h1 class="albo-anno">Stagione 2022</h1>
-    <h4 class="albo-classifica">Classifica Scontri</h4>
-    <div id="div-scontri" class="home-hidden">
-        <table class="table table-striped">
-            <thead>
-                <tr style="text-align: center;">
-                    <th scope="row">#</th>
-                    <td style="font-weight:bold">User</td>
-                    <td style="font-weight:bold">Punti</td>
-                    <td style="font-weight:bold">Diff.</td>
-                </tr>
-            </thead>
-            <tbody style="text-align: center;">
-            {% for rank in s_ranking %}
-                <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ rank.ex_username }}</td>
-                    <td>{{ rank.ex_pscontri }}</td>
-                    <td>{{ rank.ex_differenza }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <h4 class="albo-classifica">Classifica Punti</h4>
-    <div id="div-punti" class="home-hidden">
-        <table class="table table-striped">
-            <thead>
-                <tr style="text-align: center;">
-                    <th scope="row">#</th>
-                    <td style="font-weight:bold">User</td>
-                    <td style="font-weight:bold">Punti</td>
-                    <td style="font-weight:bold">Diff.</td>
-                </tr>
-            </thead>
-            <tbody style="text-align: center;">
-            {% for rank in p_ranking %}
-                <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ rank.ex_username }}</td>
-                    <td>{{ rank.ex_pgenerali }}</td>
-                    <td>{{ rank.ex_differenza }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <br>
+    <h1 style="text-align: center;">Albo d'oro dei Fanta passati</h1>
+    <br>
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+              <h5 class="mb-0">
+                <button class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Stagione 2023
+                </button>
+              </h5>
+            </div>
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion">
+              <div class="card-body">
+                <div id="div-scontri" class="home-hidden">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr style="text-align: center;">
+                                <th scope="row">#</th>
+                                <td style="font-weight:bold">User</td>
+                                <td style="font-weight:bold">P.S.</td>
+                                <td style="font-weight:bold">Punti</td>
+                                <td style="font-weight:bold">Diff.</td>
+                            </tr>
+                        </thead>
+                        <tbody style="text-align: center;">
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Tazza</td>
+                                <td>43</td>
+                                <td>1623</td>
+                                <td>298</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Dragon trainer</td>
+                                <td>43</td>
+                                <td>1641</td>
+                                <td>283</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Vettel05</td>
+                                <td>42</td>
+                                <td>1518</td>
+                                <td>238</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">4</th>
+                                <td>Zanno</td>
+                                <td>36</td>
+                                <td>1194</td>
+                                <td>83</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">5</th>
+                                <td>Albwin27</td>
+                                <td>27</td>
+                                <td>1245</td>
+                                <td>-155</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">6</th>
+                                <td>Cicciobirro01</td>
+                                <td>27</td>
+                                <td>1093</td>
+                                <td>-182</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">7</th>
+                                <td>Paul Bird Motorsport</td>
+                                <td>24</td>
+                                <td>1077</td>
+                                <td>-212</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">8</th>
+                                <td>Cortez Black Team</td>
+                                <td>20</td>
+                                <td>847</td>
+                                <td>-353</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        <div class="card">
+          <div class="card-header" id="headingTwo">
+            <h5 class="mb-0">
+              <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Stagione 2022
+              </button>
+            </h5>
+          </div>
+          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-bs-parent="#accordion">
+            <div class="card-body">
+                <div id="div-scontri" class="home-hidden">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr style="text-align: center;">
+                                <th scope="row">#</th>
+                                <td style="font-weight:bold">User</td>
+                                <td style="font-weight:bold">P.S.</td>
+                                <td style="font-weight:bold">Punti</td>
+                                <td style="font-weight:bold">Diff.</td>
+                            </tr>
+                        </thead>
+                        <tbody style="text-align: center;">
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Albwin27</td>
+                                <td>45</td>
+                                <td>1589</td>
+                                <td>190</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Vettel05</td>
+                                <td>42</td>
+                                <td>1512</td>
+                                <td>243</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Cicciobirro01</td>
+                                <td>36</td>
+                                <td>1420</td>
+                                <td>146</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">4</th>
+                                <td>Paul Bird Motorsport</td>
+                                <td>33</td>
+                                <td>1294</td>
+                                <td>38</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">5</th>
+                                <td>Tazza</td>
+                                <td>33</td>
+                                <td>1140</td>
+                                <td>-49</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">6</th>
+                                <td>Zanno</td>
+                                <td>27</td>
+                                <td>1285</td>
+                                <td>54</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">7</th>
+                                <td>Dragon trainer</td>
+                                <td>27</td>
+                                <td>975</td>
+                                <td>-308</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">8</th>
+                                <td>Cortez Black Team</td>
+                                <td>21</td>
+                                <td>1014</td>
+                                <td>-314</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h5 class="mb-0">
+                <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Stagione 2021
+                </button>
+                </h5>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-bs-parent="#accordion">
+                <div class="card-body">
+                    <div id="div-scontri" class="home-hidden">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr style="text-align: center;">
+                                    <th scope="row">#</th>
+                                    <td style="font-weight:bold">User</td>
+                                    <td style="font-weight:bold">Punti</td>
+                                </tr>
+                            </thead>
+                            <tbody style="text-align: center;">
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>Monta</td>
+                                    <td>1815</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>Vettel05</td>
+                                    <td>1634.5</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td>Tazza</td>
+                                    <td>1319.5</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">4</th>
+                                    <td>Albwin27</td>
+                                    <td>1233.5</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">5</th>
+                                    <td>Team As Turbo</td>
+                                    <td>1159.5</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">6</th>
+                                    <td>Cicciobirro01</td>
+                                    <td>1114.5</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">7</th>
+                                    <td>Cortez Black Team</td>
+                                    <td>1070</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingFour">
+              <h5 class="mb-0">
+                <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                  Stagione 2020
+                </button>
+              </h5>
+            </div>
+            <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-bs-parent="#accordion">
+              <div class="card-body">
+                <div id="div-scontri" class="home-hidden">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr style="text-align: center;">
+                                <th scope="row">#</th>
+                                <td style="font-weight:bold">User</td>
+                                <td style="font-weight:bold">Punti</td>
+                            </tr>
+                        </thead>
+                        <tbody style="text-align: center;">
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Tazza</td>
+                                <td>1642</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Vettel05</td>
+                                <td>1607</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Cicciobirro01</td>
+                                <td>1228</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">4</th>
+                                <td>Albwin27</td>
+                                <td>1051</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">5</th>
+                                <td>Monta</td>
+                                <td>703</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">6</th>
+                                <td>Cortez Black Team</td>
+                                <td>553</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

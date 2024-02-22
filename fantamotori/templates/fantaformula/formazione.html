@@ -6,10 +6,32 @@
 <div class="imppagina">
     <h1 class="form-gara">#{{ nextgara.id }} - {{ nextgara.posto }}</h1>
     <p class="form-entro">Entro {{ nextgara.data }}</p>
-    {% if nextgara.f2 %}
-    <p class="form-spiega" style="color: red;">4 piloti, 2 team e TM (ogni categoria, con Formula2)</p>
-    {% else %}
-    <p class="form-spiega">2 piloti, un team e TM (ogni categoria, no Formula2)</p>
+    {% if numcategorie == 4 %}
+        <p class="form-spiega" style="color: red;">
+            8 piloti, 4 team e TM (ogni categoria)
+        </p>
+    {% elif numcategorie == 3 %}
+        {% if "F2" in listacat and "F3" in listacat %}
+        <p class="form-spiega" style="color: red;">
+            6 piloti, 3 team e TM (con F2 e F3, no IndyCar)
+        </p>
+        {% elif "F2" in listacat and "IndyCar" in listacat %}
+        <p class="form-spiega" style="color: red;">
+            6 piloti, 3 team e TM (con F2 e IndyCar, no F3)
+        </p>
+        {% endif %}
+    {% elif numcategorie == 2 %}
+        {% if "F2" in listacat %}
+        <p class="form-spiega" style="color: red;">
+            4 piloti, 2 team e TM (con F2, no F3 o IndyCar)
+        </p>
+        {% elif "IndyCar" in listacat %}
+        <p class="form-spiega" style="color: red;">
+            4 piloti, 2 team e TM (con IndyCar, no F2 o F3)
+        </p>
+        {% endif %}
+    {% elif numcategorie == 1 %}
+    <p class="form-spiega" style="color: red;">2 piloti, 1 team {%if "F1" in listacat%} e TM (F1){%else%}(IndyCar){%endif%}</p>
     {% endif %}
     <br>
     <form method="POST" action="schieramento">
@@ -26,7 +48,7 @@
             </div>
         </div>
         {% for pilota in piloti %}
-            {% if not nextgara.f2 and pilota.categoria == "F2" %}
+            {% if pilota.categoria not in listacat %}
             <div class="form-opzione" style="display: none;"></div>
             {% else %}
             <div class="form-opzione form-formula">
@@ -43,12 +65,33 @@
                         {% elif forloop.counter == 2 %}{{ punti_piloti.1.0 }} | {{ punti_piloti.1.1 }} | {{ punti_piloti.1.2 }}
                         {% elif forloop.counter == 3 %}{{ punti_piloti.2.0 }} | {{ punti_piloti.2.1 }} | {{ punti_piloti.2.2 }}
                         {% elif forloop.counter == 4 %}{{ punti_piloti.3.0 }} | {{ punti_piloti.3.1 }} | {{ punti_piloti.3.2 }}
+                        {% elif forloop.counter == 5 %}{{ punti_piloti.4.0 }} | {{ punti_piloti.4.1 }} | {{ punti_piloti.4.2 }}
+                        {% elif forloop.counter == 6 %}{{ punti_piloti.5.0 }} | {{ punti_piloti.5.1 }} | {{ punti_piloti.5.2 }}
+                        {% elif forloop.counter == 7 %}{{ punti_piloti.6.0 }} | {{ punti_piloti.6.1 }} | {{ punti_piloti.6.2 }}
+                        {% elif forloop.counter == 8 %}{{ punti_piloti.7.0 }} | {{ punti_piloti.7.1 }} | {{ punti_piloti.7.2 }}
                         {% endif %}
                     </p>
                 </div>
             </div>
             {% endif %}
         {% endfor %}
+        <p class="form-cap">Capitano:</p>
+        <select name="capitan" style="width: 100%; font-size: x-large; text-align: center; border-radius: 10px; ">
+            <option selected value="0">Nessun capitano</option>
+            {% for pilota in piloti %}
+            <option value="{{ pilota.nome }}">{{ pilota.nome }}</option>
+            {% endfor %}
+        </select>
+        <div style="text-align: center;">
+            <div class="form-check form-check-inline">
+                <input name="gara1" class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value=1>
+                <label class="form-check-label" for="inlineRadio1">Gara 1</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input name="gara2" class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value=1>
+                <label class="form-check-label" for="inlineRadio2">Gara 2</label>
+            </div>
+        </div>
         <br>
         <div class="form-cate">
             <div class="form-opnome">
@@ -62,7 +105,7 @@
             </div>
         </div>
         {% for team in teams %}
-            {% if not nextgara.f2 and team.categoria == "F2" %}
+            {% if team.categoria not in listacat %}
             <div class="form-opzione" style="display: none"></div>
             {% else %}
             <div class="form-opzione form-formula">
@@ -77,6 +120,8 @@
                     <p>
                         {% if forloop.counter == 1 %}{{ punti_teams.0.0 }} | {{ punti_teams.0.1 }} | {{ punti_teams.0.2 }}
                         {% elif forloop.counter == 2 %}{{ punti_teams.1.0 }} | {{ punti_teams.1.1 }} | {{ punti_teams.1.2 }}
+                        {% elif forloop.counter == 3 %}{{ punti_teams.2.0 }} | {{ punti_teams.2.1 }} | {{ punti_teams.2.2 }}
+                        {% elif forloop.counter == 4 %}{{ punti_teams.3.0 }} | {{ punti_teams.3.1 }} | {{ punti_teams.3.2 }}
                         {% endif %}
                     </p>
                 </div>
@@ -84,6 +129,7 @@
             {% endif %}
         {% endfor %}
         <br>
+        {% if numcategorie != 1 or "F1" in listacat %}
         <div class="form-cate">
             <div class="form-opnome">
                 <h4>Team Manager</h4>
@@ -102,6 +148,7 @@
             </div>
         </div>
         <br>
+        {% endif %}
         <button class="btn btn-danger btn-lg form-btn" type="submit">Salva formazione</button>
     </form>
 </div>

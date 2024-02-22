@@ -158,4 +158,109 @@ if (link_formula && link_moto) {
     link_formula.addEventListener("click", () => {
         window.location.href = "/fantaformula";
     })
-}   
+}
+
+
+// MOTOCALCOLO/FORMULACALCOLO/MOTOCAMBIOPILOTA/FORMULACAMBIOPILOTA
+// Cerca per i piloti nella barra di ricerca delle qualifiche
+function cercaPilota(tag) {
+    const inputId = tag.id;
+    const inputValue = tag.value;
+    let results = document.getElementById("listapiloti").value;
+    results = results.replace(/'/g, '"');
+    results = JSON.parse(results);
+    const parentElement = document.getElementById(`dropdown-menu${inputId}`);
+    const elementsToRemove = document.querySelectorAll("li");
+    elementsToRemove.forEach(element => {
+        element.remove();
+    });
+    if (inputValue) {
+        const matchingWords = results.filter(word => word.includes(inputValue));
+        matchingWords.sort((a, b) => {
+            const indexA = a.indexOf(inputValue);
+            const indexB = b.indexOf(inputValue);
+            return indexA - indexB;
+        });
+        matchingWords.forEach(word => {
+            const listItem = document.createElement("li");
+            const link = document.createElement("a");
+            link.classList.add("dropdown-item");
+            link.textContent = word;
+            link.addEventListener("click", () => {
+                // Nel button inserisci il nome del pilota selezionato
+                const btn = document.getElementById(`dropdownMenuButton${inputId}`);
+                btn.innerHTML = word;
+                // Cambio nome pilota
+                if (window.location.pathname.includes("adm-piloti")) {
+                    const hiddeninput = document.getElementById("oldname");
+                    hiddeninput.value = word;
+                }
+                // Cambio di scuderie pilota
+                else if (window.location.pathname.includes("adm-team")) {
+                    if (tag.id == "1") {
+                        const hiddeninput = document.getElementById("oldpilota");
+                        hiddeninput.value = word;
+                    } else if (tag.id == "2") {
+                        const hiddeninput = document.getElementById("newpilota");
+                        hiddeninput.value = word;
+                    }
+                }
+                // Calcolo gara
+                else if (window.location.pathname.includes("calcolo")) {
+                    const hiddeninput = document.getElementById(`quali-${inputId}`);
+                    hiddeninput.value = word;
+                }
+            })
+            listItem.appendChild(link);
+            parentElement.appendChild(listItem);
+        });
+        if (matchingWords.length == 0) {
+            const listItem = document.createElement('li');
+            listItem.textContent = "No Item";
+            listItem.classList.add('dropdown-item');
+            parentElement.appendChild(listItem);
+        }
+    } else {
+        results.forEach(word => {
+            const listItem = document.createElement("li");
+            const link = document.createElement("a");
+            link.classList.add("dropdown-item");
+            link.textContent = word;
+            link.addEventListener("click", () => {
+                const btn = document.getElementById(`dropdownMenuButton${inputId}`);
+                btn.innerHTML = word;
+            })
+            listItem.appendChild(link);
+            parentElement.appendChild(listItem);
+        });
+    }
+}
+
+
+// MODIFICA GARA
+function annullaGara() {
+    const inputAnnulla = document.getElementById("annullata");
+    inputAnnulla.value = "1";
+    const submitButton = document.getElementById("submit");
+    submitButton.click();
+}
+
+
+// Visualizza Penalità
+function viewPen(tag) {
+    const inputId = tag.id;
+    const divPenalità = document.getElementById(`pen-${inputId}`);
+    const divPenInputs = divPenalità.getElementsByTagName('input');
+    if (divPenalità.style.display == "block") {
+        for (const inputTag of divPenInputs) {
+            inputTag.disabled = true;
+        }
+        divPenalità.style.display = "none";
+    }
+    else if (divPenalità.style.display == "none") {
+        for (const inputTag of divPenInputs) {
+            inputTag.disabled = false;
+        }
+        divPenalità.style.display = "block";
+    }
+}

@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block title %} Modifica utente {% endblock %}
+
+{% block body %}
+<div class="imppagina">
+    <div class="home-profilo">
+        <img class="circle-img" src="{{utente.immagine}}">
+        <p class="home-utente">{{utente.username}}</p>
+    </div>
+    <div class="d-grid gap-2">
+        <a href="../logout" class="btn btn-dark">LOGOUT</a>
+    </div>
+    <br>
+    {% if message %}
+    <div>
+        <p class="login-errore">{{message}}</p>
+    </div>
+    <br>
+    {% endif %}
+    <form style="background-color: ghostwhite; border-radius: 3px;" action="{% url 'utente' %}" method="POST" autocomplete="off">
+        <b>Cambia password</b>
+        {% csrf_token %}
+        <input type="hidden" name="changepassword" value="1">
+        <div class="mb-3 input-group-lg">
+            <input name="oldpassword" type="password" class="form-control" placeholder="Vecchia password">
+        </div>
+        <div class="mb-3 input-group-lg">
+            <input name="newpassword" type="password" class="form-control" placeholder="Nuova password">
+        </div>
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-dark btn-lg">Conferma password</button>
+        </div>
+    </form>
+    <br>
+    <form style="background-color: ghostwhite; border-radius: 3px;" action="{% url 'utente' %}" method="POST" autocomplete="off">
+        <b>Cambia immagine</b>
+        <p style="font-size: small;">Consiglio un'immagine con aspetto 1:1 (quadrata) per migliore visibilità</p> 
+        {% csrf_token %}
+        <input type="hidden" name="changeimg" value="1">
+        <div class="mb-3 input-group-lg">
+            <input name="urlimmagine" type="text" class="form-control" placeholder="URL immagine">
+        </div>
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-dark btn-lg">Cambia immagine</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
