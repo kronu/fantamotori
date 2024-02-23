@@ -1622,6 +1622,9 @@ def formula_schieramento(request):
                 garacap = 1
             else:
                 garacap = 1 if gara1 else 2
+        else:
+            formazione_capitano = None
+            garacap = None
         # Salva la formazione nel database
         formazione = Formula_formazione.objects.create(
             giornata = formazione_giornata,
