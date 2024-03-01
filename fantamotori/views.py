@@ -1508,7 +1508,7 @@ def formula_formazione(request):
             case "f1": listacat.append("F1")
             case "f2": listacat.append("F2")
             case "f3": listacat.append("F3")
-            case "indy": listacat.append("IndyCar")
+            case "indy": listacat.append("Indy")
     numcategorie = len(listacat)
     return render(request, "fantaformula/formazione.html", {
         "piloti": piloti,
