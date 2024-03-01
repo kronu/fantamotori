@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.contrib import messages
 from datetime import datetime
+from django.core.exceptions import PermissionDenied
 
 from .models import Moto_giornata, Moto_formazione, Moto_piloti, Moto_punti, Moto_team, Moto_teammanager, Moto_scontri, User
 from .models import Formula_giornata, Formula_formazione, Formula_piloti, Formula_punti, Formula_team, Formula_teammanager, Formula_scontri
@@ -94,27 +95,18 @@ def utente(request):
 
 def check_moto(request):
     if request.user.fanta != 0 and request.user.fanta != 1:
-        return render(request, "errore.html", {
-            "message": "Non partecipi al FantaMoto.",
-            "cat": "moto"
-        })
+        raise PermissionDenied()
     
 
 def check_formula(request):
     if request.user.fanta != 0 and request.user.fanta != 2:
-        return render(request, "errore.html", {
-            "message": "Non partecipi al FantaFormula.",
-            "cat": "formula"
-        })
+        raise PermissionDenied()
 
 
 def check_admin(request, categoria):
     autorizzati = ["Tazza", "Albwin27", "Cortez Black Team", "Cicciobirro01"]
     if request.user.username not in autorizzati:
-        return render(request, "errore.html", {
-            "message": "Non sei un admin. Se credi sia un errore contattami.",
-            "cat": categoria,
-        })
+        raise PermissionDenied()
 
 
 ################################################################ MOTO ##########################################################################
@@ -1508,7 +1500,7 @@ def formula_formazione(request):
             case "f1": listacat.append("F1")
             case "f2": listacat.append("F2")
             case "f3": listacat.append("F3")
-            case "indy": listacat.append("IndyCar")
+            case "indy": listacat.append("Indy")
     numcategorie = len(listacat)
     return render(request, "fantaformula/formazione.html", {
         "piloti": piloti,
