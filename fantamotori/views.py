@@ -1185,7 +1185,7 @@ def formula_home(request):
                 case "f1": listacat.append("F1")
                 case "f2": listacat.append("F2")
                 case "f3": listacat.append("F3")
-                case "indy": listacat.append("IndyCar")
+                case "indy": listacat.append("Indy")
     else:
         listacat = None
     return render(request, "fantaformula/home.html", {
@@ -1552,7 +1552,7 @@ def formula_schieramento(request):
                 case "f1": listacat.append("F1")
                 case "f2": listacat.append("F2")
                 case "f3": listacat.append("F3")
-                case "indy": listacat.append("IndyCar")
+                case "indy": listacat.append("Indy")
         numcategorie = len(listacat)
         if (tm is None and numcategorie != 1) or (tm is None and numcategorie == 1 and "indy" not in nextgara.categ):
             message = "FORMAZIONE NON SCHIERATA: SELEZIONA UN TEAM MANAGER"
@@ -1610,7 +1610,7 @@ def formula_schieramento(request):
         # Seleziona il capitano
         if capitano != "0":
             formazione_capitano = Formula_piloti.objects.get(nome=capitano)
-            if formazione_capitano.categoria != "IndyCar":
+            if formazione_capitano.categoria != "Indy":
                 garacap = 1
             else:
                 garacap = 1 if gara1 else 2
@@ -1719,7 +1719,7 @@ def formula_admgara(request):
                 categorie += "f2,"
             if request.POST.get("F3") != "":
                 categorie += "f3,"
-            if request.POST.get("IndyCar") != "":
+            if request.POST.get("Indy") != "":
                 categorie += "indy,"
             if request.POST.get("I2") != "":
                 categorie += "i2,"
