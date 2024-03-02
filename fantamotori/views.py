@@ -1802,7 +1802,7 @@ def formula_calcologara(request, id):
                         message = "CALCOLO ANNULLATO: SCELTO PILOTA IN QUALIFICA NON APPARTENENTE ALLA SUA CATEGORIA"
                     elif temp_cate == "f3" and contr_cate_pilota != "F3":
                         message = "CALCOLO ANNULLATO: SCELTO PILOTA IN QUALIFICA NON APPARTENENTE ALLA SUA CATEGORIA"
-                    elif temp_cate == "indy" and contr_cate_pilota != "IndyCar":
+                    elif temp_cate == "indy" and contr_cate_pilota != "Indy":
                         message = "CALCOLO ANNULLATO: SCELTO PILOTA IN QUALIFICA NON APPARTENENTE ALLA SUA CATEGORIA"
                     if value not in contr_quali:
                         contr_quali.append(value)
