@@ -709,17 +709,18 @@ def moto_admgara(request):
                 gara.posto = request.POST["nome"]
             # Cambia categorie gara
             categorie = ""
-            if request.POST.get("MotoGP") != "":
+            if request.POST.get("MotoGP") != None:
                 categorie += "gp,"
-            if request.POST.get("Moto2") != "":
+            if request.POST.get("Moto2") != None:
                 categorie += "2,"
-            if request.POST.get("Moto3") != "":
+            if request.POST.get("Moto3") != None:
                 categorie += "3,"
-            if request.POST.get("MotoE") != "":
+            if request.POST.get("MotoE") != None:
                 categorie += "e,"
-            if request.POST.get("SBK") != "":
+            if request.POST.get("SBK") != None:
                 categorie += "sbk,"
-            gara.categ = categorie
+            if categorie != "":
+                gara.categ = categorie
             # Orario
             if request.POST["orario"] != "":
                 orario = request.POST["orario"].replace("T", " ")
@@ -1689,7 +1690,7 @@ def formula_admteam(request):
         new.team = team
         old.save()
         new.save()
-    return render(request, "fantamoto/adm_team.html", {
+    return render(request, "fantaformula/adm_team.html", {
         "cat": "formula",
         "teams": Formula_team.objects.all(),
         "listapiloti": formula_listapiloti
@@ -1711,19 +1712,20 @@ def formula_admgara(request):
                 gara.posto = request.POST["nome"]
             # Cambia categorie gara
             categorie = ""
-            if request.POST.get("Sprint") != "":
+            if request.POST.get("Sprint") != None:
                 categorie += "sprint,"
-            if request.POST.get("F1") != "":
+            if request.POST.get("F1") != None:
                 categorie += "f1,"
-            if request.POST.get("F2") != "":
+            if request.POST.get("F2") != None:
                 categorie += "f2,"
-            if request.POST.get("F3") != "":
+            if request.POST.get("F3") != None:
                 categorie += "f3,"
-            if request.POST.get("Indy") != "":
+            if request.POST.get("IndyCar") != None:
                 categorie += "indy,"
-            if request.POST.get("I2") != "":
+            if request.POST.get("I2") != None:
                 categorie += "i2,"
-            gara.categ = categorie
+            if categorie != "":
+                gara.categ = categorie
             # Orario
             if request.POST["orario"] != "":
                 orario = request.POST["orario"].replace("T", " ")
@@ -1809,6 +1811,7 @@ def formula_calcologara(request, id):
                     else:
                         message = "CALCOLO ANNULLATO: UN PILOTA E' PRESENTE PIU' VOLTE NELLE QUALIFICHE"
                 else:
+                    print(key, value)
                     message = "CALCOLO ANNULLATO: IN UNA QUALIFICA NON E' STATO SPECIFICATO UN PILOTA"
             # Errori Gare
             elif "-spr-" in key:
