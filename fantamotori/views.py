@@ -124,6 +124,7 @@ def moto_home(request):
     # Cerca prossima gara, se finite, ritorna None
     try:
         nextgara = Moto_giornata.objects.get(data=nextdate)
+        print(nextgara)
     except:
         nextgara = None
     # Cerca ultimo risultato, se prima gara, ritorna None
@@ -534,8 +535,8 @@ def moto_schieramento(request):
         elif numcategorie == 2:
             message = "FORMAZIONE NON SCHIERATA: NUMERO DI CATEGORIE IMPOSSIBILE"
         elif numcategorie == 3:
-            if len(piloti) != 6:
-                message = "FORMAZIONE NON SCHIERATA: SELEZIONA 6 PILOTI"
+            if len(piloti) != 8:
+                message = "FORMAZIONE NON SCHIERATA: SELEZIONA 8 PILOTI"
             elif len(teams) != 3:
                 message = "FORMAZIONE NON SCHIERATA: SELEZIONA 3 TEAM"
             for pilota in piloti:
@@ -547,8 +548,8 @@ def moto_schieramento(request):
             if "Moto3" not in categorie_teams or "Moto2" not in categorie_teams or "MotoGP" not in categorie_teams:
                 message = "FORMAZIONE NON SCHIERATA: SELEZIONA UN TEAM DI OGNI CATEGORIA"
         elif numcategorie == 4:
-            if len(piloti) != 7:
-                message = "FORMAZIONE NON SCHIERATA: SELEZIONA 7 PILOTI"
+            if len(piloti) != 10:
+                message = "FORMAZIONE NON SCHIERATA: SELEZIONA 10 PILOTI"
             elif len(teams) != 4:
                 message = "FORMAZIONE NON SCHIERATA: SELEZIONA 4 TEAM"
             if "e" in nextgara.categ:
@@ -745,18 +746,25 @@ def moto_calcologara(request, id):
                 "message": "HAI GIÀ CALCOLATO QUESTA GIORNATA ._.",
                 "cat": "moto"
             })
-        # Ottieni tutte le formazioni (se non schierata, creane una vuota)
+        # Ottieni tutte le formazioni (se non schierata, creane una)
         formazioni = []
         for user in User.objects.all():
             if user.fanta != 2:
                 try:
                     formazione = Moto_formazione.objects.get(username=user.username, giornata=id)
                 except:
+                    # Crea formazione uguale all'ultima per chi non ha schierato
+                    precedente = Moto_formazione.objects.get(username=user.username, giornata=int(id)-1)
                     formazione = Moto_formazione.objects.create(
                         giornata = id,
                         data = timezone.localtime(),
+                        teammanager = precedente.teammanager,
                         username = user.username,
-                        utente = user)
+                        utente = user,
+                        capitano = precedente.capitano,
+                        cap_gara = precedente.cap_gara)
+                    formazione.piloti.set(precedente.piloti.all())
+                    formazione.team.set(precedente.team.all())
                     formazione.save()
                 formazioni.append(formazione)
         # Distingui le info ricevute da POST e controlla se errori
@@ -898,7 +906,7 @@ def moto_calcologara(request, id):
             print("Nessun errore")
         
         # Definiamo punteggi gare e helpers
-        punti_sprint = {"1": 12, "2": 9, "3": 7, "4": 6, "5": 5, "6": 4, "7": 3, "8": 2, "9": 1}
+        punti_sprint = {"1": 12, "2": 9, "3": 7, "4": 6, "5": 5, "6": 4, "7": 3, "8": 2, "9": 1, "10": 0, "11": 0, "12": 0, "13": 3, "14": 2, "15": 1}
         punti_gare = {"1": 25, "2": 20, "3": 16, "4": 13, "5": 11, "6": 10, "7": 9, "8": 8, "9": 7, "10": 6, "11": 5, "12": 4, "13": 3, "14": 2, "15": 1}
         punti_pen = {"ll": 3, "dp": 2, "js": 2, "dt": 3}
         if int(id) < 10:
@@ -908,6 +916,7 @@ def moto_calcologara(request, id):
         zonaout = {"spr": 9, "feat": 15}
         contr_pen = []
         contr_squalifica = []
+        contr_tm = []
         # Cerca capitani schierati
         capitani = []
         for formazione in Moto_formazione.objects.filter(giornata=id):
@@ -948,6 +957,7 @@ def moto_calcologara(request, id):
                     setattr(team, numerogara, già_tpunti)
                     pilota.save()
                     team.save()
+                    
             # Qualifiche
             if "-q1" in key or "-q2" in key or "-q3" in key:
                 if value != "":
@@ -969,22 +979,63 @@ def moto_calcologara(request, id):
                     già_punti = getattr(pilota, numerogara)
                     if già_punti is None:
                         già_punti = 0
-                    già_punti += 2
+                    già_punti += 3
                     setattr(pilota, numerogara, già_punti)
                     pilota.save()
             # Ricordi delle penalità per dopo
             if "-ll-" in key or "-dp-" in key or "-js-" in key or "-dt-" in key:
                 if value != "":
                     contr_pen.append(dict(nome=key.split("-")[2], tipo=key.split("-")[1], molt=value))
-        # Ora i team manager (qui non prenderanno le penalità del team, potrebbero ottenere risultati negativi / 2)
+            # Check DNF per il calcolo team manager
+            if "-dnfspr-" in key or "-dnffeat-" in key:
+                if value != "":
+                    contr_tm.append(dict(nome=key.split("-")[2], tipo=key.split("-")[1]))
+
+        # Ora i team manager (risultati del team se entrambi i piloti finiscono in gara, oppure 0 punti)
         for tm in Moto_teammanager.objects.all():
-            corrisp_team = Moto_team.objects.get(nome=tm.team.nome)
-            punti_team = getattr(corrisp_team, numerogara)
-            if punti_team is None:
-                punti_team = 0
-            punti_tm = int(punti_team / 2)
-            setattr(tm, numerogara, punti_tm)
+            pilot1, pilot2 = Moto_piloti.objects.filter(team=tm.team)
+            p1_spr = False
+            p2_spr = False
+            p1_feat = False
+            p2_feat = False
+            for ps in contr_tm:
+                if ps["nome"] == pilot1.nome:
+                    if ps["tipo"] == "dnfspr":
+                        p1_spr = True
+                    if ps["tipo"] == "dnffeat":
+                        p1_feat = True
+                elif ps["nome"] == pilot2.nome:
+                    if ps["tipo"] == "dnfspr":
+                        p2_spr = True
+                    if ps["tipo"] == "dnffeat":
+                        p2_feat = True
+            # se entrambi DNF, il punteggio sarà 0
+            if (p1_spr or p2_spr) and (p1_feat or p2_feat):
+                setattr(tm, numerogara, 0)
+            # se nessun DNF, il punteggio sarà uguale al team
+            if not p1_spr and not p1_feat and not p2_spr and not p2_feat:
+                pt_team = getattr(Moto_team.objects.get(nome=tm.team.nome), numerogara)
+                if pt_team is None:
+                    pt_team = 0
+                setattr(tm, numerogara, pt_team)
+            # se DNF nella sprint, azzera punteggio sprint e recupera punteggio feature
+            if (p1_spr or p2_spr) and not p1_feat and not p2_feat:
+                posizione1 = request.POST[f"gp-feat-{pilot1.nome}"]
+                posizione2 = request.POST[f"gp-feat-{pilot2.nome}"]
+                pts = 0
+                pts += punti_gare.get(posizione1, 0)
+                pts += punti_gare.get(posizione2, 0)
+                setattr(tm, numerogara, pts)
+            # se DNF nella feature, azzera punteggio feature e recupera punteggio sprint
+            if not p1_spr and not p2_spr and (p1_feat or p2_feat):
+                posizione1 = request.POST[f"gp-spr-{pilot1.nome}"]
+                posizione2 = request.POST[f"gp-spr-{pilot2.nome}"]
+                pts = 0
+                pts += punti_sprint.get(posizione1, 0)
+                pts += punti_sprint.get(posizione2, 0)
+                setattr(tm, numerogara, pts)
             tm.save()
+
         # Penalità
         for penalità in contr_pen:
             pilota = Moto_piloti.objects.get(nome=penalità["nome"])
@@ -1013,10 +1064,8 @@ def moto_calcologara(request, id):
             già_punticap = getattr(pilota, numerogara)
             if già_punticap is None:
                 già_punticap = 0
-            if capitano["risultato"] == "" or int(capitano["risultato"]) > 15:
+            if capitano["risultato"] == "" or int(capitano["risultato"]) > 10:
                 già_punticap -= 10
-            elif 15 <= int(capitano["risultato"]) < 10:
-                già_punticap -= 5
             elif 10 <= int(capitano["risultato"]) < 5:
                 già_punticap += 0
             elif int(capitano["risultato"]) <= 5:
@@ -1156,6 +1205,7 @@ def formula_home(request):
     # Cerca prossima gara, se finite, ritorna None
     try:
         nextgara = Formula_giornata.objects.get(data=nextdate)
+        print(nextgara)
     except:
         nextgara = None
     # Cerca ultimo risultato, se prima gara, ritorna None
@@ -1294,7 +1344,7 @@ def formula_scontro(request, id, scontro):
     try:
         piloti1 = formazione1.piloti.all()
         teams1 = formazione1.team.all()
-        if Formula_giornata.objects.get(id=id).categ.count(",") != 1:
+        if Formula_giornata.objects.get(id=id).categ.count(",") != 1 or "f1" in Formula_giornata.objects.get(id=id).categ:
             tm1 = formazione1.teammanager.nome
         else:
             tm1 = None
@@ -1312,7 +1362,7 @@ def formula_scontro(request, id, scontro):
             if punti_team1 or punti_team1 == 0:
                 punti_teams1.append(punti_team1)
         # E del team manager
-        if Formula_giornata.objects.get(id=id).categ.count(",") != 1:
+        if Formula_giornata.objects.get(id=id).categ.count(",") != 1 or "f1" in Formula_giornata.objects.get(id=id).categ:
             punti_tm1 = getattr(Formula_teammanager.objects.get(nome=tm1), numerogara)
         else:
             punti_tm1 = None
@@ -1346,7 +1396,7 @@ def formula_scontro(request, id, scontro):
     try:
         piloti2 = formazione2.piloti.all()
         teams2 = formazione2.team.all()
-        if Formula_giornata.objects.get(id=id).categ.count(",") != 1:
+        if Formula_giornata.objects.get(id=id).categ.count(",") != 1 or "f1" in Formula_giornata.objects.get(id=id).categ:
             tm2 = formazione2.teammanager.nome
         else:
             tm2 = None
@@ -1363,7 +1413,7 @@ def formula_scontro(request, id, scontro):
             if punti_team2 or punti_team2 == 0:
                 punti_teams2.append(punti_team2)
         # Team Manager
-        if Formula_giornata.objects.get(id=id).categ.count(",") != 1:
+        if Formula_giornata.objects.get(id=id).categ.count(",") != 1 or "f1" in Formula_giornata.objects.get(id=id).categ:
             punti_tm2 = getattr(Formula_teammanager.objects.get(nome=tm2), numerogara)
         else:
             punti_tm2 = None
@@ -1572,13 +1622,8 @@ def formula_schieramento(request):
                 message = "FORMAZIONE NON SCHIERATA: SELEZIONA 6 PILOTI"
             elif len(teams) != 3:
                 message = "FORMAZIONE NON SCHIERATA: SELEZIONA 3 TEAM"
-        elif numcategorie == 4:
-            if len(piloti) != 8:
-                message = "FORMAZIONE NON SCHIERATA: SELEZIONA 8 PILOTI"
-            elif len(teams) != 4:
-                message = "FORMAZIONE NON SCHIERATA: SELEZIONA 4 TEAM"
-        elif numcategorie > 4:
-            message = f"{numcategorie}"
+        elif numcategorie >= 4:
+            raise Exception("TROPPE CATEGORIE")
         try:
             if message:
                 return render(request, "errore.html", {"cat": "formula", "message": message})
@@ -1757,11 +1802,18 @@ def formula_calcologara(request, id):
                 try:
                     formazione = Formula_formazione.objects.get(username=user.username, giornata=id)
                 except:
+                    # Crea formazione uguale all'ultima per chi non ha schierato
+                    precedente = Formula_formazione.objects.get(username=user.username, giornata=int(id)-1)
                     formazione = Formula_formazione.objects.create(
                         giornata = id,
                         data = timezone.localtime(),
+                        teammanager = precedente.teammanager,
                         username = user.username,
-                        utente = user)
+                        utente = user,
+                        capitano = precedente.capitano,
+                        cap_gara = precedente.cap_gara)
+                    formazione.piloti.set(precedente.piloti.all())
+                    formazione.team.set(precedente.team.all())
                     formazione.save()
                 formazioni.append(formazione)
         # Distingui le info ricevute da POST e controlla se errori
@@ -1884,10 +1936,6 @@ def formula_calcologara(request, id):
             if cat == "f1":
                 if contr_flfeat != 1:
                     message = "CALCOLO ANNULLATO: PIU' PILOTI HANNO LO STESSO FAST LAP/NESSUN FAST LAP ASSEGNATO (FEATURE F1)"
-                elif contr_bestpilota != 1:
-                    message = "CALCOLO ANNULLATO: PIU' PILOTI SONO I MIGLIORI DELLA GIORNATA/NESSUN PILOTA COME MIGLIORE DELLA GIORNATA"
-                elif contr_bestpit != 1:
-                    message = "CALCOLO ANNULLATO: PIU' PILOTI HANNO IL MIGLIOR PIT/NESSUN PILOTA HA IL MIGLIOR PIT"
             elif cat == "sprint":
                 if contr_flspr != 1:
                     message = "CALCOLO ANNULLATO: PIU' PILOTI HANNO LO STESSO FAST LAP/NESSUN FAST LAP ASSEGNATO (SPRINT F1)"
@@ -1909,17 +1957,16 @@ def formula_calcologara(request, id):
             print("Nessun errore")
         
         # Definiamo punteggi gare e helpers
-        punti_feat12 = {"1": 25, "2": 18, "3": 15, "4": 12, "5": 10, "6": 8, "7": 6, "8": 4, "9": 2, "10": 1}
-        punti_spr12 = {"1": 10, "2": 8, "3": 6, "4": 5, "5": 4, "6": 3, "7": 2, "8": 1}
-        punti_feat3i = {"1": 15, "2": 14, "3": 13, "4": 12, "5": 11, "6": 10, "7": 9, "8": 8, "9": 7, "10": 6, "11": 5, "12": 4, "13": 3, "14": 2, "15": 1}
-        punti_spr3i = {"1": 10, "2": 9, "3": 8, "4": 7, "5": 6, "6": 5, "7": 4, "8": 3, "9": 2, "10": 1}
+        punti_feat123 = {"1": 25, "2": 18, "3": 15, "4": 12, "5": 10, "6": 8, "7": 6, "8": 4, "9": 2, "10": 1}
+        punti_spr123 = {"1": 10, "2": 8, "3": 6, "4": 5, "5": 4, "6": 3, "7": 2, "8": 1}
         if int(id) < 10:
             numerogara = f"gara0{id}"
         else:
             numerogara = f"gara{id}"
-        zonaout = {"spr12": 8, "feat12": 10, "spr3i": 10, "feat3i": 15}
+        zonaout = {"spr123": 8, "feat123": 10}
         contr_pen = []
         contr_squalifica = []
+        contr_tm = []
         # Cerca capitani schierati
         capitani = []
         for formazione in Formula_formazione.objects.filter(giornata=id):
@@ -1934,14 +1981,10 @@ def formula_calcologara(request, id):
                 # Calcolo punteggio team va qui se no prende bonus piloti
                 pilota = Formula_piloti.objects.get(nome=key.split("-")[2])
                 team = Formula_team.objects.get(nome=pilota.team.nome)
-                if "f1-spr" in key or "f2-spr" in key:
-                    qualegara = "spr12"
-                elif "f1-feat" in key or "f2-feat" in key:
-                    qualegara = "feat12"
-                elif "f3-spr" in key:
-                    qualegara = "spr3i"
-                elif "f3-feat" in key or "indy-feat" in key or "indy-feat2" in key:
-                    qualegara = "feat3i"
+                if "f1-spr" in key or "f2-spr" in key or "f3-spr" in key:
+                    qualegara = "spr123"
+                elif "f1-feat" in key or "f2-feat" in key or "f3-feat" in key:
+                    qualegara = "feat123"
                 if value != "" and int(value) <= zonaout[qualegara]:
                     # Controlla se capitano (bonus da assegnare alla fine)
                     for capitano in capitani:
@@ -1958,19 +2001,13 @@ def formula_calcologara(request, id):
                     if già_tpunti is None:
                         già_tpunti = 0
                     if "-spr-" in key:
-                        if "f1-" in key or "f2-" in key:
-                            già_ppunti += punti_spr12[value]
-                            già_tpunti += punti_spr12[value]
-                        elif "f3-" in key:
-                            già_ppunti += punti_spr3i[value]
-                            già_tpunti += punti_spr3i[value]
+                        if "f1-" in key or "f2-" in key or "f3-" in key:
+                            già_ppunti += punti_spr123[value]
+                            già_tpunti += punti_spr123[value]
                     elif "-feat" in key:
-                        if "f1-" in key or "f2-" in key:
-                            già_ppunti += punti_feat12[value]
-                            già_tpunti += punti_feat12[value]
-                        elif "f3-" in key or "indy-" in key:
-                            già_ppunti += punti_feat3i[value]
-                            già_tpunti += punti_feat3i[value]
+                        if "f1-" in key or "f2-" in key or "f3-" in key:
+                            già_ppunti += punti_feat123[value]
+                            già_tpunti += punti_feat123[value]
                     setattr(pilota, numerogara, già_ppunti)
                     setattr(team, numerogara, già_tpunti)
                     pilota.save()
@@ -1996,7 +2033,7 @@ def formula_calcologara(request, id):
                     già_punti = getattr(pilota, numerogara)
                     if già_punti is None:
                         già_punti = 0
-                    già_punti += 1
+                    già_punti += 3
                     setattr(pilota, numerogara, già_punti)
                     pilota.save()
             # Miglior pilota
@@ -2016,15 +2053,67 @@ def formula_calcologara(request, id):
             elif "-5s-" in key or "-dt-" in key or "-squ-" in key:
                 if value != "":
                     contr_pen.append(dict(nome=key.split("-")[2], tipo=key.split("-")[1], molt=value))
-        # Ora i team manager (qui non prenderanno bonus/malus del team)
+            # Check DNF per il calcolo team manager
+            elif "-dnfspr-" in key or "-dnffeat-" in key:
+                if value != "":
+                    contr_tm.append(dict(nome=key.split("-")[2], tipo=key.split("-")[1]))
+        
+        # Ora i team manager (risultati del team se entrambi i piloti finiscono in gara, oppure 0 punti)
         for tm in Formula_teammanager.objects.all():
-            corrisp_team = Formula_team.objects.get(nome=tm.team.nome)
-            punti_team = getattr(corrisp_team, numerogara)
-            if punti_team is None:
-                punti_team = 0
-            punti_tm = int(punti_team / 2)
-            setattr(tm, numerogara, punti_tm)
+            pilot1, pilot2 = Formula_piloti.objects.filter(team=tm.team)
+            if "sprint" in categorie:
+                p1_spr = False
+                p2_spr = False
+            p1_feat = False
+            p2_feat = False
+            for ps in contr_tm:
+                if ps["nome"] == pilot1.nome:
+                    if ps["tipo"] == "dnfspr":
+                        p1_spr = True
+                elif ps["nome"] == pilot2.nome:
+                    if ps["tipo"] == "dnfspr":
+                        p2_spr = True
+                    if ps["tipo"] == "dnffeat":
+                        p2_feat = True
+            if "sprint" in categorie:
+                # se entrambi DNF, il punteggio sarà 0
+                if (p1_spr or p2_spr) and (p1_feat or p2_feat):
+                    setattr(tm, numerogara, 0)
+                # se nessun DNF, il punteggio sarà uguale al team
+                if not p1_spr and not p1_feat and not p2_spr and not p2_feat:
+                    pt_team = getattr(Formula_team.objects.get(nome=tm.team.nome), numerogara)
+                    if pt_team is None:
+                        pt_team = 0
+                    setattr(tm, numerogara, pt_team)
+                # se DNF nella sprint, azzera punteggio sprint e recupera punteggio feature
+                if (p1_spr or p2_spr) and not p1_feat and not p2_feat:
+                    posizione1 = request.POST[f"gp-feat-{pilot1.nome}"]
+                    posizione2 = request.POST[f"gp-feat-{pilot2.nome}"]
+                    pts = 0
+                    pts += punti_feat123.get(posizione1, 0)
+                    pts += punti_feat123.get(posizione2, 0)
+                    setattr(tm, numerogara, pts)
+                # se DNF nella feature, azzera punteggio feature e recupera punteggio sprint
+                if not p1_spr and not p2_spr and (p1_feat or p2_feat):
+                    posizione1 = request.POST[f"gp-spr-{pilot1.nome}"]
+                    posizione2 = request.POST[f"gp-spr-{pilot2.nome}"]
+                    pts = 0
+                    pts += punti_spr123.get(posizione1, 0)
+                    pts += punti_spr123.get(posizione2, 0)
+                    setattr(tm, numerogara, pts)
+            # Se c'è solo feature
+            else:
+                # Se almeno un DNF, azzera punteggio
+                if p1_feat or p2_feat:
+                    setattr(tm, numerogara, 0)
+                # Se nessun DNF, punteggio uguale al team
+                else:
+                    pt_team = getattr(Formula_team.objects.get(nome=tm.team.nome), numerogara)
+                    if pt_team is None:
+                        pt_team = 0
+                    setattr(tm, numerogara, pt_team)
             tm.save()
+
         # Penalità
         for penalità in contr_pen:
             pilota = Formula_piloti.objects.get(nome=penalità["nome"])
@@ -2059,13 +2148,9 @@ def formula_calcologara(request, id):
                 già_punticap = 0
             if capitano["risultato"] == "" or int(capitano["risultato"]) > 10:
                 già_punticap -= 10
-            elif 10 <= int(capitano["risultato"]) < 7:
-                già_punticap -= 5
-            elif 7 <= int(capitano["risultato"]) < 5:
+            elif 10 <= int(capitano["risultato"]) < 5:
                 già_punticap += 0
-            elif 5 <= int(capitano["risultato"]) < 3:
-                già_punticap += 5
-            elif int(capitano["risultato"]) <= 3:
+            elif int(capitano["risultato"]) <= 5:
                 già_punticap += 10
             setattr(pilota, numerogara, già_punticap)
             pilota.save()

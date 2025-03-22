@@ -42,6 +42,10 @@
                                     <label for="{{categoria}}-flspr-{{pilota.nome}}" class="form-check-label">FL</label>
                                     <input name="{{categoria}}-flspr-{{pilota.nome}}" class="form-check-input" type="checkbox">
                                 </div>
+                                <div class="form-check form-check-inline">
+                                    <label for="{{categoria}}-dnfspr-{{pilota.nome}}" class="form-check-label">DNF</label>
+                                    <input name="{{categoria}}-dnfspr-{{pilota.nome}}" class="form-check-input" type="checkbox">
+                                </div>
                             </div>
                             {% endif %}
                             <div style="text-align: center; margin-bottom: 5px;">
@@ -51,8 +55,12 @@
                                     <label for="{{categoria}}-flfeat-{{pilota.nome}}" class="form-check-label">FL</label>
                                     <input name="{{categoria}}-flfeat-{{pilota.nome}}" class="form-check-input" type="checkbox">
                                 </div>
+                                <div class="form-check form-check-inline">
+                                    <label for="{{categoria}}-dnffeat-{{pilota.nome}}" class="form-check-label">DNF</label>
+                                    <input name="{{categoria}}-dnffeat-{{pilota.nome}}" class="form-check-input" type="checkbox">
+                                </div>
                             </div>
-                            <div style="text-align: center; margin-bottom: 5px;">
+                            <div style="display: none;">
                                 <div class="form-check form-check-inline">
                                     <label for="{{categoria}}-bestpilot-{{pilota.nome}}" class="form-check-label">Miglior Pilota</label>
                                     <input name="{{categoria}}-bestpilot-{{pilota.nome}}" class="form-check-input" type="checkbox">
@@ -62,7 +70,7 @@
                                     <input name="{{categoria}}-bestpit-{{pilota.nome}}" class="form-check-input" type="checkbox">
                                 </div>
                             </div>
-                            <div class="d-grid gap-2 col-6 mx-auto" style="margin-bottom: 5px;">
+                            <div style="display: none;">
                                 <button id="{{categoria}}-{{pilota.nome}}" class="btn btn-secondary btn-sm" type="button" onclick="viewPen(this)">Visualizza penalità</button>
                             </div>
                             <div style="display: none;" id="pen-{{categoria}}-{{pilota.nome}}">
@@ -122,7 +130,7 @@
                                     <input name="{{categoria}}-flfeat-{{pilota.nome}}" class="form-check-input" type="checkbox">
                                 </div>
                             </div>
-                            <div class="d-grid gap-2 col-6 mx-auto" style="margin-bottom: 5px;">
+                            <div style="display: none;">
                                 <button id="{{categoria}}-{{pilota.nome}}" class="btn btn-secondary btn-sm" type="button" onclick="viewPen(this)">Visualizza penalità</button>
                             </div>
                             <div style="display: none;" id="pen-{{categoria}}-{{pilota.nome}}">
@@ -181,7 +189,7 @@
                                     <input name="{{categoria}}-flfeat-{{pilota.nome}}" class="form-check-input" type="checkbox">
                                 </div>
                             </div>
-                            <div class="d-grid gap-2 col-6 mx-auto" style="margin-bottom: 5px;">
+                            <div style="display: none;">
                                 <button id="{{categoria}}-{{pilota.nome}}" class="btn btn-secondary btn-sm" type="button" onclick="viewPen(this)">Visualizza penalità</button>
                             </div>
                             <div style="display: none;" id="pen-{{categoria}}-{{pilota.nome}}">
@@ -242,7 +250,7 @@
                             </div>
                         </div>
                         {% endif %}
-                        <div class="d-grid gap-2 col-6 mx-auto" style="margin-bottom: 5px;">
+                        <div style="display: none;">
                             <button id="{{categoria}}-{{pilota.nome}}" class="btn btn-secondary btn-sm" type="button" onclick="viewPen(this)">Visualizza penalità</button>
                         </div>
                         <div style="display: none;" id="pen-{{categoria}}-{{pilota.nome}}">

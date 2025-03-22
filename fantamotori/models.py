@@ -179,8 +179,6 @@ class Formula_team(models.Model):
     gara22 = models.IntegerField(blank=True, null=True)
     gara23 = models.IntegerField(blank=True, null=True)
     gara24 = models.IntegerField(blank=True, null=True)
-    gara25 = models.IntegerField(blank=True, null=True)
-    gara26 = models.IntegerField(blank=True, null=True)
     totale = models.IntegerField(default=0)
 
 
@@ -214,8 +212,6 @@ class Formula_piloti(models.Model):
     gara22 = models.IntegerField(blank=True, null=True)
     gara23 = models.IntegerField(blank=True, null=True)
     gara24 = models.IntegerField(blank=True, null=True)
-    gara25 = models.IntegerField(blank=True, null=True)
-    gara26 = models.IntegerField(blank=True, null=True)
     totale = models.IntegerField(default=0)
 
 
@@ -248,8 +244,6 @@ class Formula_teammanager(models.Model):
     gara22 = models.IntegerField(blank=True, null=True)
     gara23 = models.IntegerField(blank=True, null=True)
     gara24 = models.IntegerField(blank=True, null=True)
-    gara25 = models.IntegerField(blank=True, null=True)
-    gara26 = models.IntegerField(blank=True, null=True)
     totale = models.IntegerField(default=0)
 
 
